@@ -1,18 +1,16 @@
-﻿{
-  "$schema": "http://json.schemastore.org/launchsettings.json",
+{
   "iisSettings": {
-    "windowsAuthentication": false, 
-    "anonymousAuthentication": true, 
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "https://127.0.0.1:44318",
-      "sslPort": 44318
+      "applicationUrl": "http://localhost:50143/",
+      "sslPort": 44300
     }
   },
   "profiles": {
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "https://127.0.0.1:44318",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -20,10 +18,10 @@
     "UniversityOfExtremaduraBOT": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "https://127.0.0.1:44318",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "applicationUrl": "http://localhost:50144/"
     }
   }
 }

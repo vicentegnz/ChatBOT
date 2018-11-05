@@ -12,3 +12,17 @@
 /Users/vicentegonzalezortega/Desktop/Develop/UniversityOfExtremaduraBOT/obj/Debug/netcoreapp2.1/UniversityOfExtremaduraBOT.RazorTargetAssemblyInfo.cache
 /Users/vicentegonzalezortega/Desktop/Develop/UniversityOfExtremaduraBOT/obj/Debug/netcoreapp2.1/UniversityOfExtremaduraBOT.dll
 /Users/vicentegonzalezortega/Desktop/Develop/UniversityOfExtremaduraBOT/obj/Debug/netcoreapp2.1/UniversityOfExtremaduraBOT.pdb
+C:\Develop\UniversityOfExtremaduraBOT\bin\Debug\netcoreapp2.1\UniversityOfExtremaduraBOT.deps.json
+C:\Develop\UniversityOfExtremaduraBOT\bin\Debug\netcoreapp2.1\UniversityOfExtremaduraBOT.runtimeconfig.json
+C:\Develop\UniversityOfExtremaduraBOT\bin\Debug\netcoreapp2.1\UniversityOfExtremaduraBOT.runtimeconfig.dev.json
+C:\Develop\UniversityOfExtremaduraBOT\bin\Debug\netcoreapp2.1\UniversityOfExtremaduraBOT.dll
+C:\Develop\UniversityOfExtremaduraBOT\bin\Debug\netcoreapp2.1\UniversityOfExtremaduraBOT.pdb
+C:\Develop\UniversityOfExtremaduraBOT\obj\Debug\netcoreapp2.1\UniversityOfExtremaduraBOT.csproj.CoreCompileInputs.cache
+C:\Develop\UniversityOfExtremaduraBOT\obj\Debug\netcoreapp2.1\UniversityOfExtremaduraBOT.RazorAssemblyInfo.cache
+C:\Develop\UniversityOfExtremaduraBOT\obj\Debug\netcoreapp2.1\UniversityOfExtremaduraBOT.RazorAssemblyInfo.cs
+C:\Develop\UniversityOfExtremaduraBOT\obj\Debug\netcoreapp2.1\UniversityOfExtremaduraBOT.AssemblyInfoInputs.cache
+C:\Develop\UniversityOfExtremaduraBOT\obj\Debug\netcoreapp2.1\UniversityOfExtremaduraBOT.AssemblyInfo.cs
+C:\Develop\UniversityOfExtremaduraBOT\obj\Debug\netcoreapp2.1\UniversityOfExtremaduraBOT.RazorTargetAssemblyInfo.cache
+C:\Develop\UniversityOfExtremaduraBOT\obj\Debug\netcoreapp2.1\UniversityOfExtremaduraBOT.dll
+C:\Develop\UniversityOfExtremaduraBOT\obj\Debug\netcoreapp2.1\UniversityOfExtremaduraBOT.pdb
+C:\Develop\UniversityOfExtremaduraBOT\obj\Debug\netcoreapp2.1\UniversityOfExtremaduraBOT.csprojAssemblyReference.cache

@@ -6,13 +6,13 @@
             "type": "endpoint",
             "appId": "",
             "appPassword": "",
-            "endpoint": "https://127.0.0.1:44318/api/messages",
-            "id": "35546b60-e148-11e8-a2a0-29ea10303e71",
-            "name": "UniversityOfExtremaduraBOT"
+            "endpoint": "http://localhost:50143/api/messages",
+            "id": "4c22cdb0-e151-11e8-9c8a-c3c839c313de",
+            "name": "https://localhost:44300/api/messages"
         }
     ],
     "padlock": "",
     "version": "2.0",
-    "path": "/Users/vicentegonzalezortega/Desktop/Develop/UniversityOfExtremaduraBOT/UniversityOfExtremaduraBOT.bot",
-    "overrides": null
+    "overrides": null,
+    "path": "C:\\Develop\\UniversityOfExtremaduraBot\\UniversityOfExtremaduraBOT.bot"
 }

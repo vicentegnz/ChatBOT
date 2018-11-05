@@ -5252,7 +5252,7 @@
       ]
     },
     "Microsoft.AspNetCore.Razor.Design/2.1.2": {
-      "sha512": "ab4+TZw3Sxqrr5TwrwVyABeQkhSxYMJXgG6yZw7T+r6Vz+hcOt+pK79o15ESG7kZvWAK9wRG7emnTIia5O6R1Q==",
+      "sha512": "sa/cztXesLyTgCiYuef0RK2EAImnak0w2wrjCh/YBTvbn4iV2eTy0q3F8CyUkGiaYEyxUKGVTko6+7SMRBL4Gg==",
       "type": "package",
       "path": "microsoft.aspnetcore.razor.design/2.1.2",
       "files": [
@@ -11674,28 +11674,30 @@
     ]
   },
   "packageFolders": {
-    "/Users/vicentegonzalezortega/.nuget/packages/": {},
-    "/usr/local/share/dotnet/sdk/NuGetFallbackFolder": {}
+    "C:\\Users\\vicen\\.nuget\\packages\\": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/vicentegonzalezortega/Desktop/Develop/UniversityOfExtremaduraBOT/UniversityOfExtremaduraBOT.csproj",
+      "projectUniqueName": "C:\\Develop\\UniversityOfExtremaduraBOT\\UniversityOfExtremaduraBOT.csproj",
       "projectName": "UniversityOfExtremaduraBOT",
-      "projectPath": "/Users/vicentegonzalezortega/Desktop/Develop/UniversityOfExtremaduraBOT/UniversityOfExtremaduraBOT.csproj",
-      "packagesPath": "/Users/vicentegonzalezortega/.nuget/packages/",
-      "outputPath": "/Users/vicentegonzalezortega/Desktop/Develop/UniversityOfExtremaduraBOT/obj",
+      "projectPath": "C:\\Develop\\UniversityOfExtremaduraBOT\\UniversityOfExtremaduraBOT.csproj",
+      "packagesPath": "C:\\Users\\vicen\\.nuget\\packages\\",
+      "outputPath": "C:\\Develop\\UniversityOfExtremaduraBOT\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "/Users/vicentegonzalezortega/.config/NuGet/NuGet.Config"
+        "C:\\Users\\vicen\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp2.1"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -11715,25 +11717,25 @@
           "Microsoft.AspNetCore.App": {
             "suppressParent": "All",
             "target": "Package",
-            "version": "2.1.1"
+            "version": "[2.1.1, )",
+            "autoReferenced": true
           },
           "Microsoft.AspNetCore.Razor.Design": {
             "suppressParent": "All",
             "target": "Package",
-            "version": "2.1.2"
+            "version": "[2.1.2, )"
           },
           "Microsoft.AspNetCore.Server.Kestrel.Https": {
             "target": "Package",
-            "version": "2.1.3"
+            "version": "[2.1.3, )"
           },
           "Microsoft.Bot.Builder.Integration.AspNet.Core": {
             "target": "Package",
-            "version": "4.1.1"
+            "version": "[4.1.1, )"
           },
           "Microsoft.NETCore.App": {
-            "suppressParent": "All",
             "target": "Package",
-            "version": "2.1",
+            "version": "[2.1.0, )",
             "autoReferenced": true
           }
         },
