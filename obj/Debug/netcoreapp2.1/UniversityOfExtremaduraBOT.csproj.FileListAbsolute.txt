@@ -1,0 +1,14 @@
+/Users/vicentegonzalezortega/Desktop/Develop/UniversityOfExtremaduraBOT/obj/Debug/netcoreapp2.1/UniversityOfExtremaduraBOT.csproj.CoreCompileInputs.cache
+/Users/vicentegonzalezortega/Desktop/Develop/UniversityOfExtremaduraBOT/obj/Debug/netcoreapp2.1/UniversityOfExtremaduraBOT.RazorAssemblyInfo.cache
+/Users/vicentegonzalezortega/Desktop/Develop/UniversityOfExtremaduraBOT/obj/Debug/netcoreapp2.1/UniversityOfExtremaduraBOT.RazorAssemblyInfo.cs
+/Users/vicentegonzalezortega/Desktop/Develop/UniversityOfExtremaduraBOT/obj/Debug/netcoreapp2.1/UniversityOfExtremaduraBOT.AssemblyInfoInputs.cache
+/Users/vicentegonzalezortega/Desktop/Develop/UniversityOfExtremaduraBOT/obj/Debug/netcoreapp2.1/UniversityOfExtremaduraBOT.AssemblyInfo.cs
+/Users/vicentegonzalezortega/Desktop/Develop/UniversityOfExtremaduraBOT/bin/Debug/netcoreapp2.1/UniversityOfExtremaduraBOT.deps.json
+/Users/vicentegonzalezortega/Desktop/Develop/UniversityOfExtremaduraBOT/bin/Debug/netcoreapp2.1/UniversityOfExtremaduraBOT.runtimeconfig.json
+/Users/vicentegonzalezortega/Desktop/Develop/UniversityOfExtremaduraBOT/bin/Debug/netcoreapp2.1/UniversityOfExtremaduraBOT.runtimeconfig.dev.json
+/Users/vicentegonzalezortega/Desktop/Develop/UniversityOfExtremaduraBOT/bin/Debug/netcoreapp2.1/UniversityOfExtremaduraBOT.dll
+/Users/vicentegonzalezortega/Desktop/Develop/UniversityOfExtremaduraBOT/bin/Debug/netcoreapp2.1/UniversityOfExtremaduraBOT.pdb
+/Users/vicentegonzalezortega/Desktop/Develop/UniversityOfExtremaduraBOT/obj/Debug/netcoreapp2.1/UniversityOfExtremaduraBOT.csprojAssemblyReference.cache
+/Users/vicentegonzalezortega/Desktop/Develop/UniversityOfExtremaduraBOT/obj/Debug/netcoreapp2.1/UniversityOfExtremaduraBOT.RazorTargetAssemblyInfo.cache
+/Users/vicentegonzalezortega/Desktop/Develop/UniversityOfExtremaduraBOT/obj/Debug/netcoreapp2.1/UniversityOfExtremaduraBOT.dll
+/Users/vicentegonzalezortega/Desktop/Develop/UniversityOfExtremaduraBOT/obj/Debug/netcoreapp2.1/UniversityOfExtremaduraBOT.pdb
