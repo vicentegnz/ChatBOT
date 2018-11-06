@@ -16,7 +16,6 @@ namespace UniversityOfExtremaduraBOT
 {
     public class Startup
     {
-
         public string ContentRootPath { get; private set; }
 
         public Startup(IHostingEnvironment env)
@@ -37,6 +36,9 @@ namespace UniversityOfExtremaduraBOT
             services.AddBot<SimpleBot>(Options =>
             {
                 Options.CredentialProvider = new ConfigurationCredentialProvider(configuration);
+
+                Options.Middleware.Add(new SimpleMiddlewareBot());
+
             });
         }
 
