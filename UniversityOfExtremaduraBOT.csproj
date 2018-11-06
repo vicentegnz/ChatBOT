@@ -5,6 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove=".gitignore" />
+    <None Remove="certificate.pem" />
+    <None Remove="csr.csr" />
+    <None Remove="key.pem" />
+    <None Remove="localhost.pfx" />
+    <None Remove="ngrok" />
+    <None Remove="UniversityOfExtremaduraBOT.bot" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\" />
     <Folder Include="Bot\" />
   </ItemGroup>
