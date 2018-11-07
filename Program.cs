@@ -1,10 +1,8 @@
 ﻿
-using System.IO;
-using System.Net;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
-namespace UniversityOfExtremaduraBOT
+namespace ChatBOT
 {
     public class Program
     {
@@ -18,9 +16,6 @@ namespace UniversityOfExtremaduraBOT
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
                 .Build();
-
-
-
 
         //public static IWebHost BuildWebHost(string[] args) => WebHost.CreateDefaultBuilder(args)
         //        .UseKestrel(options =>

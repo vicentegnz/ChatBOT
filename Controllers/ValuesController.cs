@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace UniversityOfExtremaduraBOT.Controllers
+namespace ChatBOT.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

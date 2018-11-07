@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
 
-namespace UniversityOfExtremaduraBOT.Bot
+namespace ChatBOT.Bot
 {
     public class SimpleMiddlewareBot : IMiddleware
     {

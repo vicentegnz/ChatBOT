@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Bot.Builder.BotFramework;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using UniversityOfExtremaduraBOT.Bot;
+using ChatBOT.Bot;
+using ChatBOT.Middleware;
 
-namespace UniversityOfExtremaduraBOT
+namespace ChatBOT
 {
     public class Startup
     {
@@ -37,7 +34,7 @@ namespace UniversityOfExtremaduraBOT
             {
                 Options.CredentialProvider = new ConfigurationCredentialProvider(configuration);
 
-                Options.Middleware.Add(new SimpleMiddlewareBot());
+                Options.Middleware.Add(new SentimentAnalysisMiddleware());
 
             });
         }

@@ -2,8 +2,9 @@
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
+using SentimentAnalysis;
 
-namespace UniversityOfExtremaduraBOT.Bot
+namespace ChatBOT.Bot
 {
     public class SimpleBot : IBot
     {
@@ -12,8 +13,11 @@ namespace UniversityOfExtremaduraBOT.Bot
         {
             if (turnContext.Activity.Type is ActivityTypes.Message)
             {
-                string input = turnContext.Activity.Text;
-                await turnContext.SendActivityAsync($"SimpleBot: {input}");
+                var sentimentAnalysisResult = (SentimentPrediction)turnContext.TurnState["SentimentPrediction"];
+
+                var result = sentimentAnalysisResult.Sentiment ? "Positive" : "Negative";
+
+                await turnContext.SendActivityAsync($"You said {turnContext.Activity.Text}, the sentiment according to the middleware is {result}");
             }
         }
         
