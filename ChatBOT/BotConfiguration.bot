@@ -1,0 +1,27 @@
+{
+    "name": "NexoBot",
+    "services": [
+      {
+        "id": "1",
+        "type": "endpoint",
+        "name": "BotConfiguration",
+        "endpoint": "http://localhost:55677/api/messages",
+        "appId": "",
+        "appPassword": ""
+
+      },
+      {
+        "id": "2",
+        "type": "luis",
+        "name": "HelpService",
+        "region": "westus",
+        "version": "0.1",
+        "appId": "dee10eee-de9e-4faf-83e1-6ad79ff985ed",
+        "authoringKey": "0bdc84c3b1a64a9e82aeb967fac51b45",
+        "subscriptionKey": "0bdc84c3b1a64a9e82aeb967fac51b45"
+      }
+    ],
+    "padlock": "",
+    "version": "2.0",
+    "path": "C:\\Develop\\Nexo\\ChatBOT\\BotConfiguration.bot"
+}
