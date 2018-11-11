@@ -9,6 +9,8 @@ namespace ChatBOT.Bot
     public class NexoBot : IBot
     {
         public static readonly string LuisKey = "HelpService";
+        public static readonly string QnaKey = "PreguntasFrecuentes";
+
         private const string WelcomeText = "This bot will introduce you to natural language processing with LUIS. Type an utterance to get started";
 
         private readonly BotServices _services;
@@ -17,9 +19,15 @@ namespace ChatBOT.Bot
         public NexoBot(BotServices services)
         {
             _services = services ?? throw new System.ArgumentNullException(nameof(services));
+
             if (!_services.LuisServices.ContainsKey(LuisKey))
             {
                 throw new System.ArgumentException($"Invalid configuration. Please check your '.bot' file for a LUIS service named '{LuisKey}'.");
+            }
+
+            if (!_services.QnAServices.ContainsKey(QnaKey))
+            {
+                throw new System.ArgumentException($"Invalid configuration. Please check your '.bot' file for a Qna service named '{QnaKey}'.");
             }
         }
 
@@ -30,8 +38,15 @@ namespace ChatBOT.Bot
             switch (turnContext.Activity.Type) {
 
                 case ActivityTypes.Message:
-
                     
+                    //Qna
+                    var response = await _services.QnAServices[QnaKey].GetAnswersAsync(turnContext);
+
+                    if (response != null && response.Length > 0)
+                    {
+                        await turnContext.SendActivityAsync(response[0].Answer, cancellationToken: cancellationToken);
+                    }
+
                     //LUIS
                     var recognizerResult = await _services.LuisServices[LuisKey].RecognizeAsync(turnContext, cancellationToken);
                     var topIntent = recognizerResult?.GetTopScoringIntent();
@@ -39,10 +54,6 @@ namespace ChatBOT.Bot
                     if (topIntent != null && topIntent.HasValue && topIntent.Value.intent != "None")
                     {
                         await turnContext.SendActivityAsync($"LUIS dice que el intent con mayor puntuacion para el mensaje {turnContext.Activity.Text} es {topIntent.Value.intent}, con una puntuación de {topIntent.Value.score}\n");
-                    }
-                    else
-                    {
-                        await turnContext.SendActivityAsync($"No existe ningún intent para el mensaje {turnContext.Activity.Text}.");
                     }
 
                     break;
