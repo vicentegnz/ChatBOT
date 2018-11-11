@@ -9,9 +9,9 @@ namespace ChatBOT.Bot
     public class NexoBot : IBot
     {
         public static readonly string LuisKey = "HelpService";
-        public static readonly string QnaKey = "PreguntasFrecuentes";
+        public static readonly string QnaKey = "FrequentlyAskedQuestions";
 
-        private const string WelcomeText = "This bot will introduce you to natural language processing with LUIS. Type an utterance to get started";
+        private const string WelcomeText = "¿te puedo ayudar en algo?";
 
         private readonly BotServices _services;
 
@@ -22,12 +22,12 @@ namespace ChatBOT.Bot
 
             if (!_services.LuisServices.ContainsKey(LuisKey))
             {
-                throw new System.ArgumentException($"Invalid configuration. Please check your '.bot' file for a LUIS service named '{LuisKey}'.");
+                throw new System.ArgumentException($"La configuración no es correcta. Por favor comprueba que existe en tu fichero '.bot' un servicio LUIS llamado '{LuisKey}'.");
             }
 
             if (!_services.QnAServices.ContainsKey(QnaKey))
             {
-                throw new System.ArgumentException($"Invalid configuration. Please check your '.bot' file for a Qna service named '{QnaKey}'.");
+                throw new System.ArgumentException($"La configuración no es correcta.Por favor comprueba que existe en tu fichero '.bot' un servicio Qna llamado '{QnaKey}'.");
             }
         }
 
@@ -58,6 +58,12 @@ namespace ChatBOT.Bot
 
                     break;
                 case ActivityTypes.ConversationUpdate:
+
+                    if (turnContext.Activity.MembersAdded != null)
+                    {
+                        await SendWelcomeMessageAsync(turnContext, cancellationToken);
+                    }
+
                     break;
 
 
@@ -66,6 +72,20 @@ namespace ChatBOT.Bot
 
             }
         }
-        
+
+
+        private static async Task SendWelcomeMessageAsync(ITurnContext turnContext, CancellationToken cancellationToken)
+        {
+            foreach (var member in turnContext.Activity.MembersAdded)
+            {
+                if (member.Id != turnContext.Activity.Recipient.Id)
+                {
+                    await turnContext.SendActivityAsync(
+                        $"Hola {member.Name}, mi nombre es Nexo {WelcomeText}",
+                        cancellationToken: cancellationToken);
+                }
+            }
+        }
+
     }
 }

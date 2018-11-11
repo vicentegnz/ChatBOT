@@ -23,7 +23,7 @@
     {
       "id": "3",
       "type": "qna",
-      "name": "PreguntasFrecuentes",
+      "name": "FrequentlyAskedQuestions",
       "region": "westus",
       "kbId": "4015c6bb-b141-438f-9989-d41c7314b841",
       "endpointKey": "df338b6a-6d76-4168-9780-09e64fd83fbf",
