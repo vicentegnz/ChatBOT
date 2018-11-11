@@ -35,10 +35,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SentimentAnalysis\SentimentAnalysis.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="Model.zip">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

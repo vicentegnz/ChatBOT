@@ -4,8 +4,6 @@ VisualStudioVersion = 15.0.27703.2047
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatBOT", "ChatBOT.csproj", "{EEDECB49-CF2B-4764-AC21-D11722D338F0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SentimentAnalysis", "..\SentimentAnalysis\SentimentAnalysis.csproj", "{5F87ECA1-B13A-43B5-AAA5-0EFD201D83FA}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -16,10 +14,6 @@ Global
 		{EEDECB49-CF2B-4764-AC21-D11722D338F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EEDECB49-CF2B-4764-AC21-D11722D338F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EEDECB49-CF2B-4764-AC21-D11722D338F0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5F87ECA1-B13A-43B5-AAA5-0EFD201D83FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5F87ECA1-B13A-43B5-AAA5-0EFD201D83FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5F87ECA1-B13A-43B5-AAA5-0EFD201D83FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5F87ECA1-B13A-43B5-AAA5-0EFD201D83FA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

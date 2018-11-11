@@ -1,7 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using ChatBot.Services;
-using ChatBOT.Models;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
 
@@ -45,13 +44,6 @@ namespace ChatBOT.Bot
                     {
                         await turnContext.SendActivityAsync($"No existe ningún intent para el mensaje {turnContext.Activity.Text}.");
                     }
-
-                    //SentimentAnalitys
-                    //var sentimentAnalysisResult = (SentimentPredictionModelView)turnContext.TurnState["SentimentPrediction"];
-
-                    //var result = sentimentAnalysisResult.Sentiment ? "Positive" : "Negative";
-
-                    //await turnContext.SendActivityAsync($"You said {turnContext.Activity.Text}, the sentiment according to the middleware is {result}");
 
                     break;
                 case ActivityTypes.ConversationUpdate:

@@ -7,7 +7,6 @@ using Microsoft.Bot.Builder.Integration.AspNet.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ChatBOT.Bot;
-using ChatBOT.Middleware;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
 using NLog.Web;
@@ -54,8 +53,6 @@ namespace ChatBOT
             services.AddBot<NexoBot>(Options =>
             {
                 Options.CredentialProvider = new ConfigurationCredentialProvider(Configuration);
-
-                Options.Middleware.Add(new SentimentAnalysisMiddleware());
 
             });
         }
