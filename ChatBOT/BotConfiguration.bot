@@ -1,36 +1,37 @@
 {
     "name": "NexoBot",
-  "services": [
-    {
-      "id": "1",
-      "type": "endpoint",
-      "name": "BotConfiguration",
-      "endpoint": "http://localhost:55677/api/messages",
-      "appId": "",
-      "appPassword": ""
-
-    },
-    {
-      "id": "2",
-      "type": "luis",
-      "name": "HelpService",
-      "region": "westus",
-      "version": "0.1",
-      "appId": "dee10eee-de9e-4faf-83e1-6ad79ff985ed",
-      "authoringKey": "0bdc84c3b1a64a9e82aeb967fac51b45",
-      "subscriptionKey": "0bdc84c3b1a64a9e82aeb967fac51b45"
-    },
-    {
-      "id": "3",
-      "type": "qna",
-      "name": "FrequentlyAskedQuestions",
-      "region": "westus",
-      "kbId": "4015c6bb-b141-438f-9989-d41c7314b841",
-      "endpointKey": "df338b6a-6d76-4168-9780-09e64fd83fbf",
-      "hostname": "https://nexo-qnamaker.azurewebsites.net/qnamaker"
-    }
-  ],
+    "description": "",
+    "services": [
+        {
+            "type": "endpoint",
+            "appId": "",
+            "appPassword": "",
+            "endpoint": "http://localhost:5000/api/messages",
+            "id": "1",
+            "name": "BotConfiguration"
+        },
+        {
+            "type": "luis",
+            "appId": "dee10eee-de9e-4faf-83e1-6ad79ff985ed",
+            "authoringKey": "0bdc84c3b1a64a9e82aeb967fac51b45",
+            "id": "2",
+            "name": "HelpService",
+            "region": "westus",
+            "subscriptionKey": "0bdc84c3b1a64a9e82aeb967fac51b45",
+            "version": "0.1"
+        },
+        {
+            "type": "qna",
+            "endpointKey": "df338b6a-6d76-4168-9780-09e64fd83fbf",
+            "hostname": "https://nexo-qnamaker.azurewebsites.net/qnamaker",
+            "id": "3",
+            "kbId": "4015c6bb-b141-438f-9989-d41c7314b841",
+            "name": "FrequentlyAskedQuestions",
+            "region": "westus"
+        }
+    ],
     "padlock": "",
     "version": "2.0",
-    "path": "C:\\Develop\\Nexo\\ChatBOT\\BotConfiguration.bot"
+    "path": "/Users/vicentegonzalezortega/Desktop/Develop/ChatBot/ChatBOT/BotConfiguration.bot",
+    "overrides": null
 }
