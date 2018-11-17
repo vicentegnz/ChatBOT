@@ -14,6 +14,7 @@
     <None Remove="localhost.pfx" />
     <None Remove="ngrok" />
     <None Remove="UniversityOfExtremaduraBOT.bot" />
+    <None Remove="Properties\PublishProfiles\nexo-qnamaker - Web Deploy.pubxml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,6 +39,9 @@
   <ItemGroup>
     <None Update="Model.zip">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="BotConfiguration.bot">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

@@ -33,5 +33,7 @@
     "padlock": "",
     "version": "2.0",
     "path": "/Users/vicentegonzalezortega/Desktop/Develop/ChatBot/ChatBOT/BotConfiguration.bot",
-    "overrides": null
+    "overrides": null,
+    "MicrosoftAppId": "7fc90089-e994-4b22-a222-9b194afde0fc",
+    "MicrosoftAppPassword": "ecblQURO86+:;wkaLQY701|"
 }
