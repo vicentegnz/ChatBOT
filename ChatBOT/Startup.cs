@@ -14,6 +14,8 @@ using AutoMapper;
 using System;
 using Microsoft.Bot.Configuration;
 using ChatBot.Services;
+using ChatBOT.Core;
+using ChatBOT.Services;
 
 namespace ChatBOT
 {
@@ -45,6 +47,9 @@ namespace ChatBOT
             // Initialize Bot Connected Services clients.
             var connectedServices = new BotServices(botConfig);
             services.AddSingleton(sp => connectedServices);
+
+            services.AddSingleton<ISpellCheckService, SpellCheckService>();
+            services.AddSingleton<ISearchService, BingSearchService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 

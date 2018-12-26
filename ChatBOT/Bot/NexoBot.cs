@@ -1,6 +1,8 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using ChatBot.Services;
+using ChatBOT.Core;
+using ChatBOT.Domain;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
 
@@ -14,9 +16,11 @@ namespace ChatBOT.Bot
         private const string WelcomeText = "¿te puedo ayudar en algo?";
 
         private readonly BotServices _services;
+        private readonly ISpellCheckService _spellCheck;
+        private readonly ISearchService _searchService;
 
-    
-        public NexoBot(BotServices services)
+
+        public NexoBot(BotServices services, ISpellCheckService spellCheck, ISearchService searchService)
         {
             _services = services ?? throw new System.ArgumentNullException(nameof(services));
 
@@ -29,6 +33,9 @@ namespace ChatBOT.Bot
             {
                 throw new System.ArgumentException($"La configuración no es correcta.Por favor comprueba que existe en tu fichero '.bot' un servicio Qna llamado '{QnaKey}'.");
             }
+
+            _spellCheck = spellCheck;
+            _searchService = searchService;
         }
 
 
@@ -38,7 +45,9 @@ namespace ChatBOT.Bot
             switch (turnContext.Activity.Type) {
 
                 case ActivityTypes.Message:
-                    
+
+                    //turnContext.Activity.Text = _spellCheck.GetSpellCheckFromMessage(turnContext.Activity.Text);
+
                     //Qna
                     var response = await _services.QnAServices[QnaKey].GetAnswersAsync(turnContext);
 
@@ -46,15 +55,28 @@ namespace ChatBOT.Bot
                     {
                         await turnContext.SendActivityAsync(response[0].Answer, cancellationToken: cancellationToken);
                     }
+                    else {
+                        //LUIS
+                        var recognizerResult = await _services.LuisServices[LuisKey].RecognizeAsync(turnContext, cancellationToken);
+                        var topIntent = recognizerResult?.GetTopScoringIntent();
 
-                    //LUIS
-                    var recognizerResult = await _services.LuisServices[LuisKey].RecognizeAsync(turnContext, cancellationToken);
-                    var topIntent = recognizerResult?.GetTopScoringIntent();
+                        if (topIntent != null && topIntent.HasValue && topIntent.Value.intent != "None")
+                        {
+                            await turnContext.SendActivityAsync($"LUIS dice que el intent con mayor puntuacion para el mensaje {turnContext.Activity.Text} es {topIntent.Value.intent}, con una puntuación de {topIntent.Value.score}\n");
+                        }
+                        else
+                        {
+                            SearchResponseModel searchResponse = await _searchService.GetResultFromSearch(turnContext.Activity.Text);
 
-                    if (topIntent != null && topIntent.HasValue && topIntent.Value.intent != "None")
-                    {
-                        await turnContext.SendActivityAsync($"LUIS dice que el intent con mayor puntuacion para el mensaje {turnContext.Activity.Text} es {topIntent.Value.intent}, con una puntuación de {topIntent.Value.score}\n");
+                            if (searchResponse != null)
+                            {
+                                await turnContext.SendActivityAsync($"{searchResponse.Description}\n{searchResponse.Url}");
+                            }
+                        }
+                        
                     }
+
+
 
                     break;
                 case ActivityTypes.ConversationUpdate:
