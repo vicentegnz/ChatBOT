@@ -2,15 +2,10 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/ChatBOT/.vs
-/ChatBOT/bin
-/ChatBOT/obj
-/SentimentAnalysis/obj
-/SentimentAnalysis/bin/Debug
+/.vs
+/bin
+/obj
 
-
-ChatBOT/.vs
-ChatBOT/bin
-ChatBOT/obj
-SentimentAnalysis/obj
-SentimentAnalysis/bin/Debug
+.vs
+bin
+obj

@@ -46,52 +46,50 @@ namespace ChatBOT.Bot
 
                 case ActivityTypes.Message:
 
-                    //turnContext.Activity.Text = _spellCheck.GetSpellCheckFromMessage(turnContext.Activity.Text);
-
-                    //Qna
-                    var response = await _services.QnAServices[QnaKey].GetAnswersAsync(turnContext);
-
-                    if (response != null && response.Length > 0)
+                    //Spell Check 
+                    turnContext.Activity.Text = _spellCheck.GetSpellCheckFromMessage(turnContext.Activity.Text);
+                
+                    //LUIS
+                    var recognizerResult = await _services.LuisServices[LuisKey].RecognizeAsync(turnContext, cancellationToken);
+                    var topIntent = recognizerResult?.GetTopScoringIntent();
+                    if (topIntent != null && topIntent.HasValue)
                     {
-                        await turnContext.SendActivityAsync(response[0].Answer, cancellationToken: cancellationToken);
-                    }
-                    else {
-                        //LUIS
-                        var recognizerResult = await _services.LuisServices[LuisKey].RecognizeAsync(turnContext, cancellationToken);
-                        var topIntent = recognizerResult?.GetTopScoringIntent();
-
-                        if (topIntent != null && topIntent.HasValue && topIntent.Value.intent != "None")
+                        string message = string.Empty;
+                        switch (topIntent.Value.intent)
                         {
-                            await turnContext.SendActivityAsync($"LUIS dice que el intent con mayor puntuacion para el mensaje {turnContext.Activity.Text} es {topIntent.Value.intent}, con una puntuación de {topIntent.Value.score}\n");
-                        }
-                        else
-                        {
-                            SearchResponseModel searchResponse = await _searchService.GetResultFromSearch(turnContext.Activity.Text);
+                            case "None":
+                                //Qna
+                                var response = await _services.QnAServices[QnaKey].GetAnswersAsync(turnContext);
 
-                            if (searchResponse != null)
-                            {
-                                await turnContext.SendActivityAsync($"{searchResponse.Description}\n{searchResponse.Url}");
-                            }
+                                if (response != null && response.Length > 0)
+                                    message = response[0].Answer;
+                                else
+                                {
+                                    SearchResponseModel searchResponse = await _searchService.GetResultFromSearch(turnContext.Activity.Text);
+                                    if (searchResponse != null)
+                                        message = $"{searchResponse.Description}\n{searchResponse.Url}";
+                                }
+                                break;
+                            case "Agredecimientos":
+                                message = "De nada";
+                                break;
+                            case "LenguajeNoAdecuado":
+                                message = "Ese mensaje no es adecuado.";
+                                break;
+                            default:
+                                message = $"LUIS dice que el intent con mayor puntuacion para el mensaje{turnContext.Activity.Text} es {topIntent.Value.intent}, con una puntuación de {topIntent.Value.score}\n";
+                                break;
                         }
-                        
+                        await turnContext.SendActivityAsync(message);
                     }
-
-
-
                     break;
+
                 case ActivityTypes.ConversationUpdate:
 
                     if (turnContext.Activity.MembersAdded != null)
-                    {
                         await SendWelcomeMessageAsync(turnContext, cancellationToken);
-                    }
 
                     break;
-
-
-                default:
-                    break;
-
             }
         }
 
