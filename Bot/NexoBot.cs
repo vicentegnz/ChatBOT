@@ -10,16 +10,27 @@ namespace ChatBOT.Bot
 {
     public class NexoBot : IBot
     {
-        public static readonly string LuisKey = "HelpService";
-        public static readonly string QnaKey = "FrequentlyAskedQuestions";
+        #region "Consts"
 
         private const string WelcomeText = "¿te puedo ayudar en algo?";
+        private const string LuisKey = "HelpService";
+        private const string QnaKey = "FrequentlyAskedQuestions";
+
+
+        private const string UNKNOWN_INTENT_LUIS = "None";
+
+
+        #endregion
+
+        #region "Properties"
 
         private readonly BotServices _services;
-        private readonly ISpellCheckService _spellCheck;
+        //private readonly ISpellCheckService _spellCheck;
         private readonly ISearchService _searchService;
 
+        #endregion
 
+        #region "Constructor"
         public NexoBot(BotServices services, ISpellCheckService spellCheck, ISearchService searchService)
         {
             _services = services ?? throw new System.ArgumentNullException(nameof(services));
@@ -38,6 +49,8 @@ namespace ChatBOT.Bot
             _searchService = searchService;
         }
 
+        #endregion
+        #region "Public Methods"
 
         public async Task OnTurnAsync(ITurnContext turnContext, CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -47,7 +60,7 @@ namespace ChatBOT.Bot
                 case ActivityTypes.Message:
 
                     //Spell Check 
-                    turnContext.Activity.Text = _spellCheck.GetSpellCheckFromMessage(turnContext.Activity.Text);
+                    //turnContext.Activity.Text = _spellCheck.GetSpellCheckFromMessage(turnContext.Activity.Text);
                 
                     //LUIS
                     var recognizerResult = await _services.LuisServices[LuisKey].RecognizeAsync(turnContext, cancellationToken);
@@ -55,34 +68,30 @@ namespace ChatBOT.Bot
                     if (topIntent != null && topIntent.HasValue)
                     {
                         string message = string.Empty;
-                        switch (topIntent.Value.intent)
+                        if (topIntent.Value.intent == UNKNOWN_INTENT_LUIS)
                         {
-                            case "None":
-                                //Qna
-                                var response = await _services.QnAServices[QnaKey].GetAnswersAsync(turnContext);
+                            //Qna
+                            var response = await _services.QnAServices[QnaKey].GetAnswersAsync(turnContext);
 
-                                if (response != null && response.Length > 0)
-                                    message = response[0].Answer;
-                                else
-                                {
-                                    SearchResponseModel searchResponse = await _searchService.GetResultFromSearch(turnContext.Activity.Text);
-                                    if (searchResponse != null)
-                                        message = $"{searchResponse.Description}\n{searchResponse.Url}";
-                                }
-                                break;
-                            case "Agredecimientos":
-                                message = "De nada";
-                                break;
-                            case "LenguajeNoAdecuado":
-                                message = "Ese mensaje no es adecuado.";
-                                break;
-                            default:
-                                message = $"LUIS dice que el intent con mayor puntuacion para el mensaje{turnContext.Activity.Text} es {topIntent.Value.intent}, con una puntuación de {topIntent.Value.score}\n";
-                                break;
+                            if (response != null && response.Length > 0)
+                                message = response[0].Answer;
+                            else
+                            {
+                                SearchResponseModel searchResponse = await _searchService.GetResultFromSearch(turnContext.Activity.Text);
+                                if (searchResponse != null)
+                                    message = $"{searchResponse.Description}\n{searchResponse.Url}";
+                            }
                         }
+                        else
+                        {
+                            // message = LEER DE CONFIGURACION
+                        }
+
                         await turnContext.SendActivityAsync(message);
+
                     }
-                    break;
+
+                        break;
 
                 case ActivityTypes.ConversationUpdate:
 
@@ -93,6 +102,9 @@ namespace ChatBOT.Bot
             }
         }
 
+        #endregion
+
+        #region "Private Methods"
 
         private static async Task SendWelcomeMessageAsync(ITurnContext turnContext, CancellationToken cancellationToken)
         {
@@ -106,6 +118,7 @@ namespace ChatBOT.Bot
                 }
             }
         }
-
+       
+        #endregion
     }
 }
