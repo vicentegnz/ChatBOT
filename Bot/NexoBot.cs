@@ -45,7 +45,7 @@ namespace ChatBOT.Bot
                 throw new System.ArgumentException($"La configuración no es correcta.Por favor comprueba que existe en tu fichero '.bot' un servicio Qna llamado '{QnaKey}'.");
             }
 
-            _spellCheck = spellCheck;
+            //_spellCheck = spellCheck;
             _searchService = searchService;
         }
 
@@ -84,7 +84,21 @@ namespace ChatBOT.Bot
                         }
                         else
                         {
-                            // message = LEER DE CONFIGURACION
+                            switch (topIntent.Value.intent)
+                            {
+                                case "LenguajeNoAdecuado":
+                                    message = $"Disculpa, pero no tolero ese lenguaje, voy a tener que marcharme.";
+                                    break;
+                                case "Agradecimientos":
+                                    message = $"No tienes que agradecer nada, para eso estoy.";
+                                    break;
+
+                                default:
+                                    message = "No entiendo lo que me quiere decir.";
+                                    break;
+                                   
+                            }
+
                         }
 
                         await turnContext.SendActivityAsync(message);
