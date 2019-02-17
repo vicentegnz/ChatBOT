@@ -50,11 +50,11 @@ namespace ChatBOT.Bot
         }
 
         #endregion
+
         #region "Public Methods"
 
         public async Task OnTurnAsync(ITurnContext turnContext, CancellationToken cancellationToken = default(CancellationToken))
         {
-
             switch (turnContext.Activity.Type) {
 
                 case ActivityTypes.Message:
@@ -65,7 +65,7 @@ namespace ChatBOT.Bot
                     //LUIS
                     var recognizerResult = await _services.LuisServices[LuisKey].RecognizeAsync(turnContext, cancellationToken);
                     var topIntent = recognizerResult?.GetTopScoringIntent();
-                    if (topIntent != null && topIntent.HasValue)
+                    if (topIntent != null)
                     {
                         string message = string.Empty;
                         if (topIntent.Value.intent == UNKNOWN_INTENT_LUIS)
@@ -77,6 +77,7 @@ namespace ChatBOT.Bot
                                 message = response[0].Answer;
                             else
                             {
+                                //Bing Web Search
                                 SearchResponseModel searchResponse = await _searchService.GetResultFromSearch(turnContext.Activity.Text);
                                 if (searchResponse != null)
                                     message = $"{searchResponse.Description}\n{searchResponse.Url}";
@@ -98,13 +99,10 @@ namespace ChatBOT.Bot
                                     break;
                                    
                             }
-
                         }
 
                         await turnContext.SendActivityAsync(message);
-
                     }
-
                         break;
 
                 case ActivityTypes.ConversationUpdate:

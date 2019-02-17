@@ -22,8 +22,9 @@ namespace ChatBOT.Services
         public async Task<SearchResponseModel> GetResultFromSearch(string messageToSearch)
         {
             SearchResponseModel searchResponse = new SearchResponseModel();
+            messageToSearch = messageToSearch + " site:unex.es";
 
-            var webData = await _webSearchClient.Web.SearchAsync(query: messageToSearch);
+            var webData = await _webSearchClient.Web.SearchAsync(query: messageToSearch, market: "es-ES", safeSearch: "strict");
 
             if (webData?.WebPages?.Value?.Count > 0)
             {
