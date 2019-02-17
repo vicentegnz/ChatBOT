@@ -16,6 +16,9 @@ using Microsoft.Bot.Configuration;
 using ChatBot.Services;
 using ChatBOT.Core;
 using ChatBOT.Services;
+using Microsoft.Bot.Builder;
+using Microsoft.Bot.Builder.Dialogs;
+using ChatBOT.Dialog;
 
 namespace ChatBOT
 {
@@ -40,6 +43,28 @@ namespace ChatBOT
             var secretKey = Configuration.GetSection("botFileSecret")?.Value;
             var botFilePath = Configuration.GetSection("botFilePath")?.Value;
 
+
+
+            // Create conversation and user state management objects, using memory storage.
+            IStorage dataStore = new MemoryStorage();
+            var conversationState = new ConversationState(dataStore);
+            var userState = new UserState(dataStore);
+
+            // Create and register state accessors.
+            // Accessors created here are passed into the IBot-derived class on every turn.
+            services.AddSingleton<ComplexDialogBotAccessors>(sp =>
+            {
+                // Create the custom state accessor.
+                // State accessors enable other components to read and write individual properties of state.
+                var accessors = new ComplexDialogBotAccessors(conversationState, userState)
+                {
+                    DialogStateAccessor = conversationState.CreateProperty<DialogState>("DialogState"),
+                    QuestionStateAccesor = userState.CreateProperty<QuestionState>("QuestionState"),
+                };
+
+                return accessors;
+            });
+            
             // Loads .bot configuration file and adds a singleton that your Bot can access through dependency injection.
             var botConfig = BotConfiguration.Load(botFilePath ?? @".\BotConfiguration.bot", secretKey);
             services.AddSingleton(sp => botConfig ?? throw new InvalidOperationException($"The .bot configuration file could not be loaded. ({botConfig})"));
@@ -58,7 +83,6 @@ namespace ChatBOT
             services.AddBot<NexoBot>(Options =>
             {
                 Options.CredentialProvider = new ConfigurationCredentialProvider(Configuration);
-
             });
         }
 
