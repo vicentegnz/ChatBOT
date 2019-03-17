@@ -16,6 +16,11 @@ using Microsoft.Bot.Configuration;
 using ChatBot.Services;
 using ChatBOT.Core;
 using ChatBOT.Services;
+using Microsoft.Bot.Builder;
+using Microsoft.Bot.Builder.Integration;
+using Microsoft.Extensions.Options;
+using Microsoft.Bot.Builder.Dialogs;
+using System.Linq;
 
 namespace ChatBOT
 {
@@ -51,16 +56,34 @@ namespace ChatBOT
             services.AddSingleton<ISpellCheckService, SpellCheckService>();
             services.AddSingleton<ISearchService, BingSearchService>();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
-            services.AddAutoMapper();
-
             services.AddBot<NexoBot>(Options =>
             {
+                var conversationState = new ConversationState(new MemoryStorage());
+                Options.State.Add(conversationState);
                 Options.CredentialProvider = new ConfigurationCredentialProvider(Configuration);
+            });
+
+            services.AddSingleton(serviceProvider => {
+
+                var options = serviceProvider.GetRequiredService<IOptions<BotFrameworkOptions>>().Value;
+                var conversationState = options.State.OfType<ConversationState>().FirstOrDefault();
+
+                var accessors = new NexoBotAccessors(conversationState)
+                {
+                    DialogStateAccessor = conversationState.CreateProperty<DialogState>(NexoBotAccessors.DialogStateAccessorName),
+                    NexoBotStateStateAccessor = conversationState.CreateProperty<NexoBotState>(NexoBotAccessors.NexoBotStateAccesorName),
+                };
+
+                return accessors;
 
             });
+
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddAutoMapper();
+
         }
+
 
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
