@@ -55,7 +55,7 @@ namespace ChatBOT.Dialogs
                     {
                         if (teachersSearched.Count == 1)
                         {
-                            await stepContext.Context.SendActivityAsync(teachersSearched.FirstOrDefault().InfoUrl);
+                            await stepContext.Context.SendActivityAsync($"En esta dirección encontrarás toda su información {teachersSearched.FirstOrDefault().InfoUrl}.");
                             return await stepContext.EndDialogAsync();
                         }
 
@@ -68,7 +68,7 @@ namespace ChatBOT.Dialogs
                         return await stepContext.PromptAsync("choicePrompt",
                             new PromptOptions
                             {
-                                Prompt = stepContext.Context.Activity.CreateReply("¿Cual de estos profesores es para el que necesitas más información?"),
+                                Prompt = stepContext.Context.Activity.CreateReply($"He encontrado varios profesores con esos datos {Environment.NewLine} ¿De cual de estos profesores necesitas más información?"),
                                 Choices = choices,
                                 RetryPrompt = stepContext.Context.Activity.CreateReply("Por favor, comprueba que me has escrito uno de estos profesores.")
                             });

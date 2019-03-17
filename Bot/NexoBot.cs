@@ -63,11 +63,9 @@ namespace ChatBOT.Bot
                     case DialogTurnStatus.Complete:
                         // If we just finished the dialog, capture and display the results.
                         NexoBotState userInfo = results.Result as NexoBotState;
-                        string status = "Dialogo finalizado.";
-
-                        await turnContext.SendActivityAsync(status);
                         await _nexoBotAccessors.NexoBotStateStateAccessor.SetAsync(turnContext, userInfo, cancellationToken);
                         await _nexoBotAccessors.ConversationState.SaveChangesAsync(turnContext, false, cancellationToken);
+                        await dialogCtx.BeginDialogAsync(MainLuisDialog.Id, cancellationToken);
 
                         break;
                     case DialogTurnStatus.Waiting:
