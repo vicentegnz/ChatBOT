@@ -24,7 +24,7 @@ namespace ChatBOT.Bot
         {
             var dialogState = nexoBotAccessors.DialogStateAccessor;
             _dialogs = new DialogSet(dialogState);
-            _dialogs.Add(MainDialog.Instance);
+            _dialogs.Add(new MainLuisDialog(MainLuisDialog.Id, services));
             _dialogs.Add(new QuestionDialog(QuestionDialog.Id, services, spellCheck,searchService));
             _dialogs.Add(new TeacherDialog(TeacherDialog.Id, teacherService));
             _dialogs.Add(new ChoicePrompt("choicePrompt"));
@@ -57,7 +57,7 @@ namespace ChatBOT.Bot
 
                         await _nexoBotAccessors.NexoBotStateStateAccessor.SetAsync(turnContext, new NexoBotState(), cancellationToken);
                         await _nexoBotAccessors.ConversationState.SaveChangesAsync(turnContext, false, cancellationToken);
-                        await dialogCtx.BeginDialogAsync(MainDialog.Id, cancellationToken);
+                        await dialogCtx.BeginDialogAsync(MainLuisDialog.Id, cancellationToken);
                         break;
 
                     case DialogTurnStatus.Complete:
@@ -78,9 +78,35 @@ namespace ChatBOT.Bot
                 await _nexoBotAccessors.ConversationState.SaveChangesAsync(turnContext, false, cancellationToken);
 
             }
+            else
+            {
+                if(turnContext.Activity.Type == ActivityTypes.ConversationUpdate && turnContext.Activity.MembersAdded != null)
+                {
+                     await SendWelcomeMessageAsync(turnContext, cancellationToken);
+                }
+            }
         }
 
         #endregion
+
+
+        #region "Private Methods"
+        private static async Task SendWelcomeMessageAsync(ITurnContext turnContext, CancellationToken cancellationToken)
+        {
+            foreach (var member in turnContext.Activity.MembersAdded)
+            {
+                if (member.Id != turnContext.Activity.Recipient.Id)
+                {
+                    await turnContext.SendActivityAsync(
+                        $"Hola {member.Name}, soy Nexo 🤖 un asistente virtual de la Unex.",
+                        cancellationToken: cancellationToken);
+                }
+            }
+        }
+
+        #endregion
+
+
 
     }
 }

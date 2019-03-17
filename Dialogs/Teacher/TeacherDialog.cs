@@ -21,23 +21,22 @@ namespace ChatBOT.Dialogs
 
             AddStep(async (stepContext, cancellationToken) =>
             {
-                var state = await (stepContext.Context.TurnState["NexoBotAccessors"] as NexoBotAccessors).NexoBotStateStateAccessor.GetAsync(stepContext.Context);
-                var message = string.Empty;
+                //var state = await (stepContext.Context.TurnState["NexoBotAccessors"] as NexoBotAccessors).NexoBotStateStateAccessor.GetAsync(stepContext.Context);
+                //var message = string.Empty;
 
-                if (state.Messages.Any())
-                {
-                    message = $"No he encontrado ningún profesor con ese nombre, asegurate de que lo estás escribiendo correctamente.";
-                }
-                else
-                {
-                    message = $"Has seleccionado horario de tutoria de un profesor, por favor indicame el nombre del profesor del que te gustaría conocer el horario de tutorías.";
-                }
-
+                //if (state.Messages.Any())
+                //{
+                //    message = $"No he encontrado ningún profesor con ese nombre, asegurate de que lo estás escribiendo correctamente.";
+                //}
+                //else
+                //{
+                //    message = $"Has seleccionado horario de tutoria de un profesor, por favor indicame el nombre del profesor del que te gustaría conocer el horario de tutorías.";
+                //}
 
                 return await stepContext.PromptAsync("textPrompt",
                     new PromptOptions
                     {
-                        Prompt = stepContext.Context.Activity.CreateReply(message)
+                        Prompt = stepContext.Context.Activity.CreateReply("¿Podrías indicarme el nombre del profesor?")
                     });
             });
 
@@ -52,17 +51,19 @@ namespace ChatBOT.Dialogs
                 {
                     List<TeacherModel> teachersSearched = GetTeachersFilteredByName(result, teacherList.Result);
 
-                    if (teachersSearched.Count == 1)
+                    if (teachersSearched.Any())
                     {
-                        await stepContext.Context.SendActivityAsync(teachersSearched.FirstOrDefault().InfoUrl);
-                        return await stepContext.EndDialogAsync();
-                    }
-                    else
-                    {
+                        if (teachersSearched.Count == 1)
+                        {
+                            await stepContext.Context.SendActivityAsync(teachersSearched.FirstOrDefault().InfoUrl);
+                            return await stepContext.EndDialogAsync();
+                        }
+
                         List<Choice> choices = new List<Choice>();
-                        foreach (var teacher in teachersSearched) {
+                        foreach (var teacher in teachersSearched)
+                        {
                             var nameSeparated = teacher.Name.Split(" ");
-                            choices.Add(new Choice { Value = teacher.Name , Synonyms = nameSeparated.TakeLast(nameSeparated.Length).ToList() });
+                            choices.Add(new Choice { Value = teacher.Name, Synonyms = nameSeparated.TakeLast(2).ToList() });
                         }
                         return await stepContext.PromptAsync("choicePrompt",
                             new PromptOptions
@@ -72,6 +73,12 @@ namespace ChatBOT.Dialogs
                                 RetryPrompt = stepContext.Context.Activity.CreateReply("Por favor, comprueba que me has escrito uno de estos profesores.")
                             });
                     }
+                    else
+                    {
+                        await stepContext.Context.SendActivityAsync($"No tengo en la base de datos ningún profesor con estos datos ({result}).");
+                        return await stepContext.ReplaceDialogAsync(Id);
+                    }
+                 
                 }
                 else
                 { 
