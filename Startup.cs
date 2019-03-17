@@ -55,6 +55,10 @@ namespace ChatBOT
 
             services.AddSingleton<ISpellCheckService, SpellCheckService>();
             services.AddSingleton<ISearchService, BingSearchService>();
+            services.AddSingleton<ITeacherService, TeacherService>();
+            services.AddSingleton<IScheduleService, ScheduleService>();
+            services.AddSingleton<ISubjectService, SubjectService>();
+
 
             services.AddBot<NexoBot>(Options =>
             {

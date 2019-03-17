@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using ChatBot.Services;
 using ChatBOT.Core;
 using ChatBOT.Dialogs;
-using ChatBOT.Domain;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Schema;
@@ -12,85 +11,76 @@ namespace ChatBOT.Bot
 {
     public class NexoBot : IBot
     {
-        //#region "Consts"
+        #region "Properties"
 
-        private const string WelcomeText = "¿te puedo ayudar en algo?";
-        //private const string LuisKey = "HelpService";
-        //private const string QnaKey = "FrequentlyAskedQuestions";
+        public NexoBotAccessors _nexoBotAccessors { get; }
+        private readonly DialogSet _dialogs;
+        
+        #endregion
 
-
-        //private const string UNKNOWN_INTENT_LUIS = "None";
-
-
-        //#endregion
-
-        //#region "Properties"
-
-        private readonly BotServices _services;
-        private readonly ISpellCheckService _spellCheck;
-        private readonly ISearchService _searchService;
-
-        //#endregion
 
         #region "Constructor"
-        public NexoBot(NexoBotAccessors nexoBotAccessors, BotServices services, ISpellCheckService spellCheck,ISearchService searchService)
+        public NexoBot(NexoBotAccessors nexoBotAccessors, BotServices services, ISpellCheckService spellCheck,ISearchService searchService, ITeacherService teacherService)
         {
             var dialogState = nexoBotAccessors.DialogStateAccessor;
-            Dialogs = new DialogSet(dialogState);
-            Dialogs.Add(MainDialog.Instance);
-            Dialogs.Add(new QuestionDialog(QuestionDialog.Id, services, spellCheck,searchService));
-            Dialogs.Add(new ChoicePrompt("choicePrompt"));
-            Dialogs.Add(new TextPrompt("textPrompt"));
-            Dialogs.Add(new NumberPrompt<int>("numberPrompt"));
+            _dialogs = new DialogSet(dialogState);
+            _dialogs.Add(MainDialog.Instance);
+            _dialogs.Add(new QuestionDialog(QuestionDialog.Id, services, spellCheck,searchService));
+            _dialogs.Add(new TeacherDialog(TeacherDialog.Id, teacherService));
+            _dialogs.Add(new ChoicePrompt("choicePrompt"));
+            _dialogs.Add(new TextPrompt("textPrompt"));
+            _dialogs.Add(new NumberPrompt<int>("numberPrompt"));
 
-            NexoBotAccessors = nexoBotAccessors;
+            _nexoBotAccessors = nexoBotAccessors;
         }
 
         #endregion
-
-        public NexoBotAccessors NexoBotAccessors { get; }
-        private readonly DialogSet Dialogs;
 
         #region "Public Methods"
 
         public async Task OnTurnAsync(ITurnContext turnContext, CancellationToken cancellationToken = default(CancellationToken))
         {
-
             if(turnContext.Activity.Type == ActivityTypes.Message)
             { 
-                await NexoBotAccessors.NexoBotStateStateAccessor.GetAsync(turnContext, () => new NexoBotState(), cancellationToken);
+                await _nexoBotAccessors.NexoBotStateStateAccessor.GetAsync(turnContext, () => new NexoBotState(), cancellationToken);
 
-                turnContext.TurnState.Add("NexoBotAccessors", NexoBotAccessors);
+                turnContext.TurnState.Add("NexoBotAccessors", _nexoBotAccessors);
 
-                var dialogCtx = await Dialogs.CreateContextAsync(turnContext, cancellationToken);
+                DialogContext dialogCtx = await _dialogs.CreateContextAsync(turnContext, cancellationToken);
+                DialogTurnResult results = await dialogCtx.ContinueDialogAsync(cancellationToken);
 
-                if(dialogCtx.ActiveDialog != null)
-                    await dialogCtx.ContinueDialogAsync(cancellationToken);
-                else
-                    await dialogCtx.BeginDialogAsync(MainDialog.Id, cancellationToken);
-
-                await NexoBotAccessors.ConversationState.SaveChangesAsync(turnContext, false, cancellationToken);
-
-            }
-        }
-
-        #endregion
-
-        #region "Private Methods"
-
-        private static async Task SendWelcomeMessageAsync(ITurnContext turnContext, CancellationToken cancellationToken)
-        {
-            foreach (var member in turnContext.Activity.MembersAdded)
-            {
-                if (member.Id != turnContext.Activity.Recipient.Id)
+                switch (results.Status)
                 {
-                    await turnContext.SendActivityAsync(
-                        $"Hola {member.Name}, mi nombre es Nexo {WelcomeText}",
-                        cancellationToken: cancellationToken);
+                    case DialogTurnStatus.Cancelled:
+                    case DialogTurnStatus.Empty:
+                        // If there is no active dialog, we should clear the user info and start a new dialog.
+
+                        await _nexoBotAccessors.NexoBotStateStateAccessor.SetAsync(turnContext, new NexoBotState(), cancellationToken);
+                        await _nexoBotAccessors.ConversationState.SaveChangesAsync(turnContext, false, cancellationToken);
+                        await dialogCtx.BeginDialogAsync(MainDialog.Id, cancellationToken);
+                        break;
+
+                    case DialogTurnStatus.Complete:
+                        // If we just finished the dialog, capture and display the results.
+                        NexoBotState userInfo = results.Result as NexoBotState;
+                        string status = "Dialogo finalizado.";
+
+                        await turnContext.SendActivityAsync(status);
+                        await _nexoBotAccessors.NexoBotStateStateAccessor.SetAsync(turnContext, userInfo, cancellationToken);
+                        await _nexoBotAccessors.ConversationState.SaveChangesAsync(turnContext, false, cancellationToken);
+
+                        break;
+                    case DialogTurnStatus.Waiting:
+                        // If there is an active dialog, we don't need to do anything here.
+                        break;
                 }
+
+                await _nexoBotAccessors.ConversationState.SaveChangesAsync(turnContext, false, cancellationToken);
+
             }
         }
-       
+
         #endregion
+
     }
 }

@@ -7,16 +7,30 @@ namespace ChatBOT.Services
 {
     public class SpellCheckService : ISpellCheckService
     {
+
+        #region "Consts"
+
         private const string MODE_SPELLCHECK = "spell";
         private const string LANGUAGE_SPELLCHECK = "es-ES";
 
+        #endregion
+
+        #region "Properties"
+
         private readonly SpellCheckClient spellCheckClient;
+
+        #endregion
+
+        #region "Ctor"
 
         public SpellCheckService()
         {
             spellCheckClient = new SpellCheckClient(new ApiKeyServiceClientCredentials("5363528dc54e4611a206afcf2dcad502"));
         }
 
+        #endregion
+
+        #region "Public Methods"
         public string GetSpellCheckFromMessage(string message)
         {
             if (string.IsNullOrEmpty(message))
@@ -40,7 +54,7 @@ namespace ChatBOT.Services
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return message;
             }
@@ -49,6 +63,7 @@ namespace ChatBOT.Services
             return message;
         }
 
+        #endregion
 
     }
 }
