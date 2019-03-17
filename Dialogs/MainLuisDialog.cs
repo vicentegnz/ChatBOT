@@ -14,18 +14,19 @@ namespace ChatBOT.Dialogs
     {
         #region "Consts"
         private const string LuisKey = "HelpService";
-        private const string UNKNOWN_INTENT_LUIS = "None";
-
-        private const string SCHEDULE_CHOICE = "Horario del grado";
-        private const string QUESTION_CHOICE = "Otra consulta";
-        private const string SUBJECT_CHOICE = "Ficha de una asignatura";
-        private const string TEACHER_CHOICE = "Horario de tutoria de un profesor";
 
         private const string SCHEDULE_INTENT_LUIS = "Horario";
         private const string SUBJECT_INTENT_LUIS = "Asignatura";
         private const string TEACHER_INTENT_LUIS = "Profesor";
         private const string LANGUAGE_INTENT_LUIS = "LenguajeNoAdecuado";
         private const string GREETINS_INTENT_LUIS = "Agradecimientos";
+        private const string HELP_INTENT_LUIS = "Ayuda";
+        private const string UNKNOWN_INTENT_LUIS = "None";
+
+        private const string SCHEDULE_CHOICE = "Horario del grado";
+        private const string QUESTION_CHOICE = "Otra consulta";
+        private const string SUBJECT_CHOICE = "Ficha de una asignatura";
+        private const string TEACHER_CHOICE = "Horario de tutoria de un profesor";
 
 
         #endregion
@@ -87,6 +88,7 @@ namespace ChatBOT.Dialogs
                             return await stepContext.BeginDialogAsync(QuestionDialog.Id);
                         case LANGUAGE_INTENT_LUIS:
                         case GREETINS_INTENT_LUIS:
+                        case HELP_INTENT_LUIS:
                             //TODO
                         default:
                             return await stepContext.NextAsync();
@@ -100,7 +102,7 @@ namespace ChatBOT.Dialogs
                 return await stepContext.NextAsync();
             });
 
-            AddStep(async (stepContext, cancellationToken) => { return await stepContext.ReplaceDialogAsync(Id); });
+            AddStep(async (stepContext, cancellationToken) => { return await stepContext.EndDialogAsync(); });
         }
 
 

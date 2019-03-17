@@ -97,9 +97,12 @@ namespace ChatBOT.Dialogs
 
             AddStep(async (stepContext, cancellationToken) =>
             {
+                var recognizerResult = await _services.LuisServices[LuisKey].RecognizeAsync(stepContext.Context, cancellationToken);
+                var topIntent = recognizerResult?.GetTopScoringIntent();
+
                 var result = stepContext.Result.ToString();
-                if (result.ToLower().Contains("si"))
-                    return await stepContext.ReplaceDialogAsync(Id, cancellationToken);
+                if (topIntent.Value.intent == "Afirmacion")
+                    return await stepContext.ReplaceDialogAsync(MainLuisDialog.Id, cancellationToken);
                 else
                     return await stepContext.EndDialogAsync();
             });
