@@ -22,13 +22,8 @@ namespace ChatBOT.Dialogs
         private const string GREETINS_INTENT_LUIS = "Agradecimientos";
         private const string HELP_INTENT_LUIS = "Ayuda";
         private const string UNKNOWN_INTENT_LUIS = "None";
-
-        private const string SCHEDULE_CHOICE = "Horario del grado";
-        private const string QUESTION_CHOICE = "Otra consulta";
-        private const string SUBJECT_CHOICE = "Ficha de una asignatura";
-        private const string TEACHER_CHOICE = "Horario de tutoria de un profesor";
-
-
+        private const string GOODBYE_INTENT_LUIS = "Despedida";
+        
         #endregion
 
         #region "Properties"
@@ -51,7 +46,7 @@ namespace ChatBOT.Dialogs
 
                 if (state.Messages.Any())
                 {
-                    message = $"¿Necesitas algo más?";
+                    message = state.Messages.LastOrDefault() == "si" ? $"Perfecto, pues dime en que más te puedo ayudar." : $"¿Necesitas algo más?";
                 }
                 else
                 {
@@ -89,7 +84,9 @@ namespace ChatBOT.Dialogs
                         case LANGUAGE_INTENT_LUIS:
                         case GREETINS_INTENT_LUIS:
                         case HELP_INTENT_LUIS:
-                            //TODO
+                        //TODO
+                        case GOODBYE_INTENT_LUIS:
+                        //TODO
                         default:
                             return await stepContext.NextAsync();
                     }

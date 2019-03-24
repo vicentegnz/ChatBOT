@@ -22,7 +22,11 @@ namespace ChatBOT.Domain
 
     public class SubjectModel
     {
+        public int Code { get; set; }
         public string Name { get; set; }
+        public string Area { get; set; }
+        public int Ects { get; set; }
+        public int Semester { get; set; }
         public string InfoUrl { get; set; }
 
     }
@@ -36,6 +40,10 @@ namespace ChatBOT.Domain
     public class TeacherModel
     {
         public string Name { get; set; }
+        public string LastName { get; set; }
+        public string Email { get; set; }
+        public List<SubjectModel> Subjects {get; set;}
+        public string Departament { get; set; }
         public string InfoUrl { get; set; }
 
     }

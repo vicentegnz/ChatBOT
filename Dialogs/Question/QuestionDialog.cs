@@ -4,11 +4,8 @@ using ChatBOT.Core;
 using ChatBOT.Domain;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
-using Microsoft.Bot.Builder.Dialogs.Choices;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ChatBOT.Dialogs
 {
@@ -23,55 +20,35 @@ namespace ChatBOT.Dialogs
 
         #region "Properties"
         private readonly BotServices _services;
-        private readonly ISpellCheckService _spellCheck;
+        private readonly ISpellCheckService _spellCheckService;
         private readonly ISearchService _searchService;
 
         #endregion
 
 
-        public QuestionDialog(string dialogId,  BotServices services, ISpellCheckService spellCheck, ISearchService searchService, IEnumerable<WaterfallStep> steps = null) : base(dialogId, steps)
+        public QuestionDialog(string dialogId,  BotServices services,ISpellCheckService spellCheckService  ,ISearchService searchService, IEnumerable<WaterfallStep> steps = null) : base(dialogId, steps)
         {
             _services = services ?? throw new ArgumentNullException(nameof(services));
             if (!_services.LuisServices.ContainsKey(LuisKey))
                 throw new ArgumentException($"La configuración no es correcta. Por favor comprueba que existe en tu fichero '.bot' un servicio LUIS llamado '{LuisKey}'.");
 
             if (!_services.QnAServices.ContainsKey(QnaKey))
-                throw new ArgumentException($"La configuración no es correcta.Por favor comprueba que existe en tu fichero '.bot' un servicio Qna llamado '{QnaKey}'.");
+                throw new ArgumentException($"La configuración no es correcta. Por favor comprueba que existe en tu fichero '.bot' un servicio Qna llamado '{QnaKey}'.");
 
             _searchService = searchService;
-
-            //AddStep(async (stepContext, cancellationToken) =>
-            //{
-            //    var state = await (stepContext.Context.TurnState["NexoBotAccessors"] as NexoBotAccessors).NexoBotStateStateAccessor.GetAsync(stepContext.Context);
-            //    var message = string.Empty;
-
-            //    if (state.Messages.Any())
-            //    {
-            //        message = $"De acuerdo, puedes preguntar de nuevo lo que no hayas entendido.";
-            //    }
-            //    else
-            //    {
-            //        message = $"Has seleccionado otra consulta, puedes hacerme cualquier pregunta relacionada con la UEX, ten en cuenta que muchas de mis respuestas estarán basadas en el FAQ de la UNEX.";
-            //    }
-
-
-            //    return await stepContext.PromptAsync("textPrompt",
-            //        new PromptOptions
-            //        {
-            //            Prompt = stepContext.Context.Activity.CreateReply(message)
-            //        });
-            //});
-
-
+            _spellCheckService = spellCheckService;
+            
             AddStep(async (stepContext, cancellationToken) =>
             {
                 var message = string.Empty;
                 var state = await (stepContext.Context.TurnState["NexoBotAccessors"] as NexoBotAccessors).NexoBotStateStateAccessor.GetAsync(stepContext.Context);
-                if(stepContext.Result != null)
+
+                if (stepContext.Result != null)
                     state.Messages.Add(stepContext.Result.ToString());
 
                 //Qna
                 var response = await _services.QnAServices[QnaKey].GetAnswersAsync(stepContext.Context);
+
                 if (response != null && response.Length > 0)
                     message = response[0].Answer;
                 else
@@ -97,19 +74,22 @@ namespace ChatBOT.Dialogs
 
             AddStep(async (stepContext, cancellationToken) =>
             {
+                var state = await (stepContext.Context.TurnState["NexoBotAccessors"] as NexoBotAccessors).NexoBotStateStateAccessor.GetAsync(stepContext.Context);
                 var recognizerResult = await _services.LuisServices[LuisKey].RecognizeAsync(stepContext.Context, cancellationToken);
                 var topIntent = recognizerResult?.GetTopScoringIntent();
 
-                var result = stepContext.Result.ToString();
-                if (topIntent.Value.intent == "Afirmacion")
-                    return await stepContext.ReplaceDialogAsync(MainLuisDialog.Id, cancellationToken);
-                else
-                    return await stepContext.EndDialogAsync();
+                state.Messages.Add(stepContext.Result.ToString());
+
+                return topIntent.Value.intent == "Afirmacion"
+                    ? await stepContext.ReplaceDialogAsync(MainLuisDialog.Id, cancellationToken)
+                    : await stepContext.EndDialogAsync();
+
+
             });
 
 
         }
 
-        public static string Id => "QuestionDialog";
+        public new static string Id => "QuestionDialog";
     }
 }

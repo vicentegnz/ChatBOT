@@ -58,8 +58,7 @@ namespace ChatBOT
             services.AddSingleton<ITeacherService, TeacherService>();
             services.AddSingleton<IScheduleService, ScheduleService>();
             services.AddSingleton<ISubjectService, SubjectService>();
-
-
+            
             services.AddBot<NexoBot>(Options =>
             {
                 var conversationState = new ConversationState(new MemoryStorage());
@@ -81,14 +80,10 @@ namespace ChatBOT
                 return accessors;
 
             });
-
-
+            
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddAutoMapper();
-
         }
-
-
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
