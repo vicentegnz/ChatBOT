@@ -107,6 +107,6 @@ namespace ChatBOT.Dialogs
                 Where(x => x.Name.Replace(" ", "").Contains(response.Replace(" ", "").RemoveDiacritics(), StringComparison.InvariantCultureIgnoreCase)).ToList();
         }
 
-        public static string Id => "TeacherDialog";
+        public new static string Id => "TeacherDialog";
     }
 }

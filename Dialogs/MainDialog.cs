@@ -55,7 +55,7 @@ namespace ChatBOT.Dialogs
         }
 
 
-        public static string Id => "mainDialog";
+        public new static string Id => "mainDialog";
 
         public static MainDialog Instance { get; } = new MainDialog(Id);
     }

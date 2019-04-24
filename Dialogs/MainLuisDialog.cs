@@ -1,31 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using ChatBot.Services;
 using ChatBOT.Bot;
+using ChatBOT.Conf;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
-using Microsoft.Bot.Builder.Dialogs.Choices;
 
 namespace ChatBOT.Dialogs
 {
     
-    public class MainLuisDialog : WaterfallDialog
+    public class MainLuisDialog : BaseDialog
     {
-        #region "Consts"
-        private const string LuisKey = "HelpService";
-
-        private const string SCHEDULE_INTENT_LUIS = "Horario";
-        private const string SUBJECT_INTENT_LUIS = "Asignatura";
-        private const string TEACHER_INTENT_LUIS = "Profesor";
-        private const string LANGUAGE_INTENT_LUIS = "LenguajeNoAdecuado";
-        private const string GREETINS_INTENT_LUIS = "Agradecimientos";
-        private const string HELP_INTENT_LUIS = "Ayuda";
-        private const string UNKNOWN_INTENT_LUIS = "None";
-        private const string GOODBYE_INTENT_LUIS = "Despedida";
-        
-        #endregion
-
         #region "Properties"
         private readonly BotServices _services;
         #endregion
@@ -35,22 +22,24 @@ namespace ChatBOT.Dialogs
 
             _services = botServices ?? throw new ArgumentNullException(nameof(botServices));
 
-            if (!_services.LuisServices.ContainsKey(LuisKey))
-                throw new ArgumentException($"La configuración no es correcta. Por favor comprueba que existe en tu fichero '.bot' un servicio LUIS llamado '{LuisKey}'.");
+            if (!_services.LuisServices.ContainsKey(LuisServiceConfiguration.LuisKey))
+                throw new ArgumentException($"La configuración no es correcta. Por favor comprueba que existe en tu fichero '.bot' un servicio LUIS llamado '{LuisServiceConfiguration.LuisKey}'.");
 
             AddStep(async (stepContext, cancellationToken) =>
             {
 
                 var state = await (stepContext.Context.TurnState["NexoBotAccessors"] as NexoBotAccessors).NexoBotStateStateAccessor.GetAsync(stepContext.Context);
-                var message = string.Empty;
-
+                var message = $"¿En que te puedo ayudar?";
+              
                 if (state.Messages.Any())
                 {
-                    message = state.Messages.LastOrDefault() == "si" ? $"Perfecto, pues dime en que más te puedo ayudar." : $"¿Necesitas algo más?";
-                }
-                else
-                {
-                    message = $"¿En que te puedo ayudar? En el caso de que no sepas de que información dispongo pideme ayuda y te explicaré que cosas puedo hacer.";
+                    var recognizerResult = await _services.LuisServices[LuisServiceConfiguration.LuisKey].RecognizeAsync(stepContext.Context, cancellationToken);
+                    var topIntent = recognizerResult?.GetTopScoringIntent();
+
+                    if (topIntent != null)
+                        message = topIntent.Value.intent == LuisServiceConfiguration.OkIntent ? $"Perfecto, pues dime en que más te puedo ayudar." : $"¿Necesitas algo más?";
+                    else
+                        message = "¿Quieres que te ayude en algo más?";
                 }
 
                 return await stepContext.PromptAsync("textPrompt",
@@ -65,31 +54,13 @@ namespace ChatBOT.Dialogs
             AddStep(async (stepContext, cancellationToken) =>
             {
                 var state = await (stepContext.Context.TurnState["NexoBotAccessors"] as NexoBotAccessors).NexoBotStateStateAccessor.GetAsync(stepContext.Context);
-                var recognizerResult = await _services.LuisServices[LuisKey].RecognizeAsync(stepContext.Context, cancellationToken);
+                var recognizerResult = await _services.LuisServices[LuisServiceConfiguration.LuisKey].RecognizeAsync(stepContext.Context, cancellationToken);
                 var topIntent = recognizerResult?.GetTopScoringIntent();
                 state.Messages.Add(stepContext.Result.ToString());
 
                 if (topIntent != null)
                 {
-                    switch (topIntent.Value.intent)
-                    {
-                        case SUBJECT_INTENT_LUIS:
-                            return await stepContext.BeginDialogAsync(SubjectDialog.Id);
-                        case TEACHER_INTENT_LUIS:
-                            return await stepContext.BeginDialogAsync(TeacherDialog.Id);
-                        case SCHEDULE_INTENT_LUIS:
-                            return await stepContext.BeginDialogAsync(ScheduleDialog.Id);
-                        case UNKNOWN_INTENT_LUIS:
-                            return await stepContext.BeginDialogAsync(QuestionDialog.Id);
-                        case LANGUAGE_INTENT_LUIS:
-                        case GREETINS_INTENT_LUIS:
-                        case HELP_INTENT_LUIS:
-                        //TODO
-                        case GOODBYE_INTENT_LUIS:
-                        //TODO
-                        default:
-                            return await stepContext.NextAsync();
-                    }
+                    return await DialogByIntent(stepContext, topIntent);
                 }
                 else
                 {
@@ -101,8 +72,7 @@ namespace ChatBOT.Dialogs
 
             AddStep(async (stepContext, cancellationToken) => { return await stepContext.EndDialogAsync(); });
         }
-
-
-        public static string Id => "mainLuisDialog";
+        
+        public new static string Id => "mainLuisDialog";
     }
 }

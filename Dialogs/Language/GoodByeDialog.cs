@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ChatBOT.Dialogs
 {
-    public class GoodByeDialog : WaterfallDialog
+    public class GoodByeDialog : BaseDialog
     {
         public GoodByeDialog(string dialogId, IEnumerable<WaterfallStep> steps = null) : base(dialogId, steps)
         {

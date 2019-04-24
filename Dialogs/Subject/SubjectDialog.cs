@@ -11,6 +11,6 @@ namespace ChatBOT.Dialogs
         {
         }
 
-        public static string Id => "Subjectdialog";
+        public new static string Id => "Subjectdialog";
     }
 }

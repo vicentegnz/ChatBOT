@@ -1,5 +1,6 @@
 ﻿using ChatBot.Services;
 using ChatBOT.Bot;
+using ChatBOT.Conf;
 using ChatBOT.Core;
 using ChatBOT.Domain;
 using Microsoft.Bot.Builder;
@@ -9,14 +10,8 @@ using System.Collections.Generic;
 
 namespace ChatBOT.Dialogs
 {
-    public sealed class QuestionDialog : WaterfallDialog
+    public sealed class QuestionDialog : BaseDialog
     {
-        #region "Consts"
-        private const string LuisKey = "HelpService";
-        private const string QnaKey = "FrequentlyAskedQuestions";
-
-        private const string UNKNOWN_INTENT_LUIS = "None";
-        #endregion
 
         #region "Properties"
         private readonly BotServices _services;
@@ -29,11 +24,11 @@ namespace ChatBOT.Dialogs
         public QuestionDialog(string dialogId,  BotServices services,ISpellCheckService spellCheckService  ,ISearchService searchService, IEnumerable<WaterfallStep> steps = null) : base(dialogId, steps)
         {
             _services = services ?? throw new ArgumentNullException(nameof(services));
-            if (!_services.LuisServices.ContainsKey(LuisKey))
-                throw new ArgumentException($"La configuración no es correcta. Por favor comprueba que existe en tu fichero '.bot' un servicio LUIS llamado '{LuisKey}'.");
+            if (!_services.LuisServices.ContainsKey(LuisServiceConfiguration.LuisKey))
+                throw new ArgumentException($"La configuración no es correcta. Por favor comprueba que existe en tu fichero '.bot' un servicio LUIS llamado '{LuisServiceConfiguration.LuisKey}'.");
 
-            if (!_services.QnAServices.ContainsKey(QnaKey))
-                throw new ArgumentException($"La configuración no es correcta. Por favor comprueba que existe en tu fichero '.bot' un servicio Qna llamado '{QnaKey}'.");
+            if (!_services.QnAServices.ContainsKey(QnaMakerServiceConfiguration.QnaKey))
+                throw new ArgumentException($"La configuración no es correcta. Por favor comprueba que existe en tu fichero '.bot' un servicio Qna llamado '{QnaMakerServiceConfiguration.QnaKey}'.");
 
             _searchService = searchService;
             _spellCheckService = spellCheckService;
@@ -47,7 +42,7 @@ namespace ChatBOT.Dialogs
                     state.Messages.Add(stepContext.Result.ToString());
 
                 //Qna
-                var response = await _services.QnAServices[QnaKey].GetAnswersAsync(stepContext.Context);
+                var response = await _services.QnAServices[QnaMakerServiceConfiguration.QnaKey].GetAnswersAsync(stepContext.Context);
 
                 if (response != null && response.Length > 0)
                     message = response[0].Answer;
@@ -75,19 +70,20 @@ namespace ChatBOT.Dialogs
             AddStep(async (stepContext, cancellationToken) =>
             {
                 var state = await (stepContext.Context.TurnState["NexoBotAccessors"] as NexoBotAccessors).NexoBotStateStateAccessor.GetAsync(stepContext.Context);
-                var recognizerResult = await _services.LuisServices[LuisKey].RecognizeAsync(stepContext.Context, cancellationToken);
+                var recognizerResult = await _services.LuisServices[LuisServiceConfiguration.LuisKey].RecognizeAsync(stepContext.Context, cancellationToken);
                 var topIntent = recognizerResult?.GetTopScoringIntent();
 
                 state.Messages.Add(stepContext.Result.ToString());
 
-                return topIntent.Value.intent == "Afirmacion"
+                if (topIntent == null) return await stepContext.EndDialogAsync();
+
+                return topIntent.Value.intent == LuisServiceConfiguration.OkIntent
                     ? await stepContext.ReplaceDialogAsync(MainLuisDialog.Id, cancellationToken)
-                    : await stepContext.EndDialogAsync();
+                    : await DialogByIntent(stepContext, topIntent);
 
 
             });
-
-
+            
         }
 
         public new static string Id => "QuestionDialog";

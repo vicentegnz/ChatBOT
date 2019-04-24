@@ -1,8 +1,10 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using ChatBot.Services;
 using ChatBOT.Core;
 using ChatBOT.Dialogs;
+using ChatBOT.Services;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Schema;
@@ -20,13 +22,24 @@ namespace ChatBOT.Bot
 
 
         #region "Constructor"
-        public NexoBot(NexoBotAccessors nexoBotAccessors, BotServices services, ISpellCheckService spellCheck,ISearchService searchService, ITeacherService teacherService)
+        public NexoBot(NexoBotAccessors nexoBotAccessors, BotServices services, 
+            ISpellCheckService spellCheck,
+            ISearchService searchService, 
+            ITeacherService teacherService,
+            IEnumerable<ILanguageService> languageServices)
         {
             var dialogState = nexoBotAccessors.DialogStateAccessor;
             _dialogs = new DialogSet(dialogState);
             _dialogs.Add(new MainLuisDialog(MainLuisDialog.Id, services));
             _dialogs.Add(new QuestionDialog(QuestionDialog.Id, services, spellCheck,searchService));
             _dialogs.Add(new TeacherDialog(TeacherDialog.Id, teacherService));
+
+            //TODOS TIENEN MISMA FUNCIONALIDAD SOLO MUESTRAN TEXTO
+            _dialogs.Add(new HelpDialog(HelpDialog.Id, new HelpService()));
+            _dialogs.Add(new LanguageNotValidDialog(LanguageNotValidDialog.Id, /*languageService resuelto con HelpService*/);
+            _dialogs.Add(new GratitudeDialog(GratitudeDialog.Id, /*languageService resuelto con HelpService*/);
+            _dialogs.Add(new GoodByeDialog(GoodByeDialog.Id, /*languageService resuelto con HelpService*/);
+
             _dialogs.Add(new ChoicePrompt("choicePrompt"));
             _dialogs.Add(new TextPrompt("textPrompt"));
             _dialogs.Add(new NumberPrompt<int>("numberPrompt"));
