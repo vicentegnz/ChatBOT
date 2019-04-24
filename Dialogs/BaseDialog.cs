@@ -25,6 +25,7 @@ namespace ChatBOT.Dialogs
                 case LuisServiceConfiguration.UnknownIntent:
                     return await stepContext.BeginDialogAsync(QuestionDialog.Id);
                 case LuisServiceConfiguration.LanguageNotValidIntent:
+                    return await stepContext.BeginDialogAsync(LanguageNotValidDialog.Id);
                 case LuisServiceConfiguration.GreetinsIntent:
                     return await stepContext.BeginDialogAsync(GratitudeDialog.Id);
                 case LuisServiceConfiguration.HelpIntent:

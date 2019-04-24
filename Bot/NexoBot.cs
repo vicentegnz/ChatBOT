@@ -25,8 +25,7 @@ namespace ChatBOT.Bot
         public NexoBot(NexoBotAccessors nexoBotAccessors, BotServices services, 
             ISpellCheckService spellCheck,
             ISearchService searchService, 
-            ITeacherService teacherService,
-            IEnumerable<ILanguageService> languageServices)
+            ITeacherService teacherService)
         {
             var dialogState = nexoBotAccessors.DialogStateAccessor;
             _dialogs = new DialogSet(dialogState);
@@ -34,11 +33,11 @@ namespace ChatBOT.Bot
             _dialogs.Add(new QuestionDialog(QuestionDialog.Id, services, spellCheck,searchService));
             _dialogs.Add(new TeacherDialog(TeacherDialog.Id, teacherService));
 
-            //TODOS TIENEN MISMA FUNCIONALIDAD SOLO MUESTRAN TEXTO
-            _dialogs.Add(new HelpDialog(HelpDialog.Id, new HelpService()));
-            _dialogs.Add(new LanguageNotValidDialog(LanguageNotValidDialog.Id, /*languageService resuelto con HelpService*/);
-            _dialogs.Add(new GratitudeDialog(GratitudeDialog.Id, /*languageService resuelto con HelpService*/);
-            _dialogs.Add(new GoodByeDialog(GoodByeDialog.Id, /*languageService resuelto con HelpService*/);
+            //SOLO VISUALIZAN TEXTO
+            _dialogs.Add(new HelpDialog(HelpDialog.Id));
+            _dialogs.Add(new LanguageNotValidDialog(LanguageNotValidDialog.Id));
+            _dialogs.Add(new GratitudeDialog(GratitudeDialog.Id));
+            _dialogs.Add(new GoodByeDialog(GoodByeDialog.Id));
 
             _dialogs.Add(new ChoicePrompt("choicePrompt"));
             _dialogs.Add(new TextPrompt("textPrompt"));

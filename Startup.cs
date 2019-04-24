@@ -58,21 +58,7 @@ namespace ChatBOT
             services.AddSingleton<ITeacherService, TeacherService>();
             services.AddSingleton<IScheduleService, ScheduleService>();
             services.AddSingleton<ISubjectService, SubjectService>();
-            services.AddSingleton<ILanguageService, HelpService>();
-            services.AddTransient<Func<string, ILanguageService>>(serviceProvider => key =>
-            {
-                switch (key)
-                {
-                    case "A":
-                        return serviceProvider.GetService<HelpService>();
-                    case "B":
-                        return serviceProvider.GetService<GoodByeService>();
-                    case "C":
-                        return serviceProvider.GetService<GratitudeService>();
-                    default:
-                        throw new KeyNotFoundException(); // or maybe return null, up to you
-                }
-            });
+            
             services.AddBot<NexoBot>(Options =>
             {
                 var conversationState = new ConversationState(new MemoryStorage());

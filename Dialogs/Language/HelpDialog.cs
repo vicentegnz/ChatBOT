@@ -17,14 +17,18 @@ namespace ChatBOT.Dialogs
         private readonly ILanguageService _helpService;
         #endregion
 
-        public HelpDialog(string dialogId, ILanguageService helpService, IEnumerable<WaterfallStep> steps = null) : base(dialogId, steps)
+        public HelpDialog(string dialogId, IEnumerable<WaterfallStep> steps = null) : base(dialogId, steps)
         {
-            _helpService = helpService;
 
             AddStep(async (stepContext, cancellationToken) =>
             {
-                await stepContext.Context.SendActivityAsync($"{_helpService.GetText()}");
-                return await stepContext.EndDialogAsync();
+                await stepContext.Context.SendActivityAsync(@"Las cosas que puedo hacer son:
+                    - Consultar la ficha de una asignatura.
+                    - Consultar información de un profesor, como puede ser su horario de tutoria.
+                    - Consultar el horario del grado.
+                    - Otras consultas relacionadas con la UNEX. (Basadas en el FAQ)");
+
+                return await stepContext.BeginDialogAsync(MainLuisDialog.Id, cancellationToken);
             });
         }
 

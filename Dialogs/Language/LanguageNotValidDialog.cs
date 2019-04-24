@@ -21,8 +21,8 @@ namespace ChatBOT.Dialogs
 
             AddStep(async (stepContext, cancellationToken) =>
             {
-                //await stepContext.Context.SendActivityAsync($"{_helpService.GetHelpText()}");
-                return await stepContext.EndDialogAsync();
+                await stepContext.Context.SendActivityAsync($"El lenguage que estás utilizando no es el adecuado.");
+                return await stepContext.BeginDialogAsync(MainLuisDialog.Id, cancellationToken);
             });
         }
 

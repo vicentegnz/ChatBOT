@@ -10,6 +10,12 @@ namespace ChatBOT.Dialogs
     {
         public GratitudeDialog(string dialogId, IEnumerable<WaterfallStep> steps = null) : base(dialogId, steps)
         {
+            AddStep(async (stepContext, cancellationToken) =>
+            {
+                await stepContext.Context.SendActivityAsync(@"No tienes porque agradecerlo, para eso estamos.");
+
+                return await stepContext.BeginDialogAsync(MainLuisDialog.Id, cancellationToken);
+            });
         }
 
         public static string Id => "gratitudeDialog";
