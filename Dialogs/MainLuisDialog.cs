@@ -27,14 +27,15 @@ namespace ChatBOT.Dialogs
 
             AddStep(async (stepContext, cancellationToken) =>
             {
-
+                
                 var state = await (stepContext.Context.TurnState["NexoBotAccessors"] as NexoBotAccessors).NexoBotStateStateAccessor.GetAsync(stepContext.Context);
-                var message = $"¿En que te puedo ayudar?";
-              
+                var message = $"Hola, soy Nexo 🤖 un asistente virtual de la Unex. Estoy deseando escucharte.";
+
                 if (state.Messages.Any())
                 {
                     var recognizerResult = await _services.LuisServices[LuisServiceConfiguration.LuisKey].RecognizeAsync(stepContext.Context, cancellationToken);
                     var topIntent = recognizerResult?.GetTopScoringIntent();
+                   
 
                     if (topIntent != null)
                         message = topIntent.Value.intent == LuisServiceConfiguration.OkIntent ? $"Perfecto, pues dime en que más te puedo ayudar." : $"¿Necesitas algo más?";

@@ -39,7 +39,6 @@ namespace ChatBOT.Dialogs
                         Prompt = stepContext.Context.Activity.CreateReply("¿Podrías indicarme el nombre del profesor?")
                     });
             });
-
             AddStep(async (stepContext, cancellationToken) =>
             {
                 var result = stepContext.Result.ToString();
@@ -56,21 +55,18 @@ namespace ChatBOT.Dialogs
                         if (teachersSearched.Count == 1)
                         {
                             await stepContext.Context.SendActivityAsync($"En esta dirección encontrarás toda su información {teachersSearched.FirstOrDefault().InfoUrl}.");
-                            return await stepContext.EndDialogAsync();
+                            return await stepContext.ReplaceDialogAsync(MainLuisDialog.Id, cancellationToken);
                         }
 
-                        List<Choice> choices = new List<Choice>();
+                        var choices = new List<Choice>();
                         foreach (var teacher in teachersSearched)
-                        {
-                            var nameSeparated = teacher.Name.Split(" ");
-                            choices.Add(new Choice { Value = teacher.Name, Synonyms = nameSeparated.TakeLast(2).ToList() });
-                        }
+                            choices.Add(new Choice { Value = teacher.Name, Synonyms = teacher.Name.Split(" ").TakeLast(2).ToList() });
                         return await stepContext.PromptAsync("choicePrompt",
                             new PromptOptions
                             {
                                 Prompt = stepContext.Context.Activity.CreateReply($"He encontrado varios profesores con esos datos {Environment.NewLine} ¿De cual de estos profesores necesitas más información?"),
-                                Choices = choices,
-                                RetryPrompt = stepContext.Context.Activity.CreateReply("Por favor, comprueba que me has escrito uno de estos profesores.")
+                                Choices = choices
+                                RetryPrompt = stepContext.Context.Activity.CreateReply("Por favor, comprueba que has escrito uno de los profesores listados.")
                             });
                     }
                     else
@@ -90,13 +86,18 @@ namespace ChatBOT.Dialogs
             AddStep(async (stepContext, cancellationToken) =>
             {
                 var response = (stepContext.Result as FoundChoice)?.Value;
-                var teacherList = teacherService.GetListOfTeachers();
-
-                List<TeacherModel> teachersSearched = GetTeachersFilteredByName(response, teacherList.Result);
-
-                await stepContext.Context.SendActivityAsync($"En esta dirección encontrarás toda su información {teachersSearched.FirstOrDefault().InfoUrl}.");
-                return await stepContext.EndDialogAsync();
-
+                
+                List<TeacherModel> teachersSearched = GetTeachersFilteredByName(response, teacherService.GetListOfTeachers().Result);
+                if (teachersSearched.Any())
+                { 
+                    await stepContext.Context.SendActivityAsync($"En esta dirección encontrarás toda su información {teachersSearched.FirstOrDefault().InfoUrl}.");
+                    return await stepContext.ReplaceDialogAsync(MainLuisDialog.Id, cancellationToken);
+                }
+                else
+                { 
+                    await stepContext.Context.SendActivityAsync($"No tengo ningun profesor con esos datos.");
+                    return await stepContext.ReplaceDialogAsync(TeacherDialog.Id, cancellationToken);
+                }
             });
 
         }
@@ -104,7 +105,7 @@ namespace ChatBOT.Dialogs
         private List<TeacherModel> GetTeachersFilteredByName(string response, List<TeacherModel> teacherList)
         {
             return teacherList.
-                Where(x => x.Name.Replace(" ", "").Contains(response.Replace(" ", "").RemoveDiacritics(), StringComparison.InvariantCultureIgnoreCase)).ToList();
+                Where(x => x.Name.Replace(" ", "").Contains(response.Replace(" ", "").RemoveDiacritics(), StringComparison.InvariantCultureIgnoreCase))?.ToList() ?? new List<TeacherModel>();
         }
 
         public new static string Id => "TeacherDialog";

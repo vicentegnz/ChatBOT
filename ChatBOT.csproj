@@ -4,7 +4,15 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <AssemblyName>ChatBOT</AssemblyName>
     <RootNamespace>ChatBOT</RootNamespace>
+    <UserSecretsId>4f965fd2-7204-4fad-a0bf-cc3bbdfe7976</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="ChatBOT\**" />
+    <Content Remove="ChatBOT\**" />
+    <EmbeddedResource Remove="ChatBOT\**" />
+    <None Remove="ChatBOT\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Remove=".gitignore" />
@@ -42,10 +50,6 @@
     <None Update="BotConfiguration.bot">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="ChatBOT\" />
   </ItemGroup>
 
 </Project>

@@ -51,12 +51,46 @@ namespace ChatBOT.Dialogs
                     //Bing Web Search
                     SearchResponseModel searchResponse = await _searchService.GetResultFromSearch(stepContext.Context.Activity.Text);
                     if (searchResponse != null)
-                        message = $"{searchResponse.Description}\n{searchResponse.Url}";
+                        message = $"No entiendo muy bien tu pregunta, he realizado una busqueda por la página de la Universidad de Extremadura y he encontrado esto:\n{searchResponse.Description}\n{searchResponse.Url}";
                 }
                   
                 await stepContext.Context.SendActivityAsync(message);
                 return await stepContext.NextAsync();
             });
+
+
+            AddStep(async (stepContext, cancellationToken) =>
+            {
+                return await stepContext.PromptAsync("textPrompt",
+                    new PromptOptions
+                    {
+                        Prompt = stepContext.Context.Activity.CreateReply($"¿Te ha servido la respuesta? Si no te ha servido la respuesta vuelve a formularmela de otra manera.")
+                    });
+            });
+
+
+            AddStep(async (stepContext, cancellationToken) =>
+            {
+                var state = await (stepContext.Context.TurnState["NexoBotAccessors"] as NexoBotAccessors).NexoBotStateStateAccessor.GetAsync(stepContext.Context);
+                var recognizerResult = await _services.LuisServices[LuisServiceConfiguration.LuisKey].RecognizeAsync(stepContext.Context, cancellationToken);
+                var topIntent = recognizerResult?.GetTopScoringIntent();
+
+                if (state.Messages.Contains(stepContext.Result.ToString())) { 
+                    await stepContext.Context.SendActivityAsync("Lo siento, pero no tengo la información que necesitas para esa pregunta.");
+                    return await stepContext.NextAsync();
+                }
+                else
+                {
+                    state.Messages.Add(stepContext.Result.ToString());
+                }
+
+                if (topIntent == null) return await stepContext.EndDialogAsync();
+
+                return topIntent.Value.intent == LuisServiceConfiguration.OkIntent
+                    ? await stepContext.ReplaceDialogAsync(MainLuisDialog.Id, cancellationToken)
+                    : await DialogByIntent(stepContext, topIntent);
+            });
+            
 
             AddStep(async (stepContext, cancellationToken) =>
             {

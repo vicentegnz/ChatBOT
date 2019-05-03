@@ -88,13 +88,13 @@ namespace ChatBOT.Bot
                 await _nexoBotAccessors.ConversationState.SaveChangesAsync(turnContext, false, cancellationToken);
 
             }
-            else
-            {
-                if(turnContext.Activity.Type == ActivityTypes.ConversationUpdate && turnContext.Activity.MembersAdded != null)
-                {
-                     await SendWelcomeMessageAsync(turnContext, cancellationToken);
-                }
-            }
+            //else
+            //{
+            //    if(turnContext.Activity.Type == ActivityTypes.ConversationUpdate && turnContext.Activity.MembersAdded != null)
+            //    {
+            //         await SendWelcomeMessageAsync(turnContext, cancellationToken);
+            //    }
+            //}
         }
 
         #endregion
