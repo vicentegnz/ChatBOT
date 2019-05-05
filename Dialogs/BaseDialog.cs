@@ -14,6 +14,8 @@ namespace ChatBOT.Dialogs
         {
             switch (topIntent.Value.intent)
             {
+                case LuisServiceConfiguration.HelloIntent:
+                    return await stepContext.BeginDialogAsync(HelloDialog.Id);
                 case LuisServiceConfiguration.SubjectIntent:
                     return await stepContext.BeginDialogAsync(SubjectDialog.Id);
                 case LuisServiceConfiguration.TeacherIntent:
@@ -33,7 +35,7 @@ namespace ChatBOT.Dialogs
                 case LuisServiceConfiguration.NotIntent:
                     return await stepContext.BeginDialogAsync(NegationDialog.Id);
                 default:
-                    return await stepContext.EndDialogAsync();
+                    return await stepContext.BeginDialogAsync(MainLuisDialog.Id);
             }
         }
     }

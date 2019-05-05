@@ -17,7 +17,7 @@ namespace ChatBOT.Dialogs
             {
                 await stepContext.Context.SendActivityAsync(@"Hasta luego, espero haberte ayudado.");
 
-                return await stepContext.BeginDialogAsync(MainLuisDialog.Id, cancellationToken);
+                return await stepContext.EndDialogAsync();
             });
         }
 

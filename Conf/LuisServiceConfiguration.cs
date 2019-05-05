@@ -15,5 +15,7 @@ namespace ChatBOT.Conf
         public const string GoodByeIntent = "Despedida";
         public const string OkIntent = "Afirmacion";
         public const string NotIntent = "Negacion";
+        public const string HelloIntent = "Saludo";
+
     }
 }
