@@ -14,8 +14,6 @@ namespace ChatBOT.Dialogs
         {
             switch (topIntent.Value.intent)
             {
-                case LuisServiceConfiguration.HelloIntent:
-                    return await stepContext.BeginDialogAsync(HelloDialog.Id);
                 case LuisServiceConfiguration.SubjectIntent:
                     return await stepContext.BeginDialogAsync(SubjectDialog.Id);
                 case LuisServiceConfiguration.TeacherIntent:

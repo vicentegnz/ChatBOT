@@ -25,24 +25,29 @@ namespace ChatBOT.Dialogs
             if (!_services.LuisServices.ContainsKey(LuisServiceConfiguration.LuisKey))
                 throw new ArgumentException($"La configuración no es correcta. Por favor comprueba que existe en tu fichero '.bot' un servicio LUIS llamado '{LuisServiceConfiguration.LuisKey}'.");
 
+
             AddStep(async (stepContext, cancellationToken) =>
             {
-                
+                var recognizerResult = await _services.LuisServices[LuisServiceConfiguration.LuisKey].RecognizeAsync(stepContext.Context, cancellationToken);
+                var topIntent = recognizerResult?.GetTopScoringIntent();
                 var state = await (stepContext.Context.TurnState["NexoBotAccessors"] as NexoBotAccessors).NexoBotStateStateAccessor.GetAsync(stepContext.Context);
-                var message = $"Hola, soy Nexo 🤖 un asistente virtual de la Unex. Estoy deseando escucharte.";
+                var message = $"¿En que te puedo ayudar?";
 
-                if (state.Messages.Any())
+                if (topIntent != null && LuisServiceConfiguration.HelloIntent == topIntent.Value.intent)
                 {
-                    var recognizerResult = await _services.LuisServices[LuisServiceConfiguration.LuisKey].RecognizeAsync(stepContext.Context, cancellationToken);
-                    var topIntent = recognizerResult?.GetTopScoringIntent();
-                   
 
-                    if (topIntent != null)
-                        message = topIntent.Value.intent == LuisServiceConfiguration.OkIntent ? $"Perfecto, pues dime en que más te puedo ayudar." : $"¿Necesitas algo más?";
-                    else
-                        message = "¿Quieres que te ayude en algo más?";
+                    message = state.Messages.Any() ? "Hola de nuevo, ¿en que te puedo ayudar?" : $"Hola, soy Nexo 🤖 un asistente virtual de la Unex. Estoy deseando escucharte.";
                 }
-
+                else
+                { 
+                    if (state.Messages.Any())
+                    {
+                        if (topIntent != null)
+                            message = topIntent.Value.intent == LuisServiceConfiguration.OkIntent ? $"Perfecto, pues dime en que más te puedo ayudar." : $"¿Necesitas algo más?";
+                        else
+                            message = "¿Quieres que te ayude en algo más?";
+                    }
+                }
                 return await stepContext.PromptAsync("textPrompt",
                     new PromptOptions
                     {
@@ -62,8 +67,8 @@ namespace ChatBOT.Dialogs
                 if (topIntent != null)
                 {
                     return topIntent.Value.intent == LuisServiceConfiguration.OkIntent
-                    ?  await stepContext.ReplaceDialogAsync(MainLuisDialog.Id, cancellationToken)
-                    :  await DialogByIntent(stepContext, topIntent);
+                    ? await stepContext.ReplaceDialogAsync(MainLuisDialog.Id, cancellationToken)
+                    : await DialogByIntent(stepContext, topIntent);
                 }
 
                 await stepContext.Context.SendActivityAsync("Ha ocurrido un error, intentelo de nuevo.");

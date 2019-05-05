@@ -34,7 +34,7 @@ namespace ChatBOT.Bot
             _dialogs.Add(new TeacherDialog(TeacherDialog.Id, teacherService));
 
             //SOLO VISUALIZAN TEXTO
-            _dialogs.Add(new HelloDialog(HelloDialog.Id));
+            //_dialogs.Add(new HelloDialog(HelloDialog.Id));
             _dialogs.Add(new HelpDialog(HelpDialog.Id));
             _dialogs.Add(new LanguageNotValidDialog(LanguageNotValidDialog.Id));
             _dialogs.Add(new GratitudeDialog(GratitudeDialog.Id));
