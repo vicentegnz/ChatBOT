@@ -1,8 +1,6 @@
 ﻿using ChatBOT.Conf;
 using Microsoft.Bot.Builder.Dialogs;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ChatBOT.Dialogs
@@ -32,6 +30,8 @@ namespace ChatBOT.Dialogs
                     return await stepContext.BeginDialogAsync(HelpDialog.Id);
                 case LuisServiceConfiguration.GoodByeIntent:
                     return await stepContext.BeginDialogAsync(GoodByeDialog.Id);
+                case LuisServiceConfiguration.NotIntent:
+                    return await stepContext.BeginDialogAsync(NegationDialog.Id);
                 default:
                     return await stepContext.EndDialogAsync();
             }

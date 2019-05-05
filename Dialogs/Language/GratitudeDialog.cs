@@ -12,7 +12,7 @@ namespace ChatBOT.Dialogs
         {
             AddStep(async (stepContext, cancellationToken) =>
             {
-                await stepContext.Context.SendActivityAsync(@"No tienes porque agradecerlo, para eso estamos.");
+                await stepContext.Context.SendActivityAsync("No tienes porque agradecerlo, para eso estamos.");
 
                 return await stepContext.BeginDialogAsync(MainLuisDialog.Id, cancellationToken);
             });

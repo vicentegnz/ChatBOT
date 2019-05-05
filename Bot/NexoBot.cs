@@ -38,6 +38,7 @@ namespace ChatBOT.Bot
             _dialogs.Add(new LanguageNotValidDialog(LanguageNotValidDialog.Id));
             _dialogs.Add(new GratitudeDialog(GratitudeDialog.Id));
             _dialogs.Add(new GoodByeDialog(GoodByeDialog.Id));
+            _dialogs.Add(new NegationDialog(NegationDialog.Id));
 
             _dialogs.Add(new ChoicePrompt("choicePrompt"));
             _dialogs.Add(new TextPrompt("textPrompt"));

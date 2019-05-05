@@ -61,14 +61,14 @@ namespace ChatBOT.Dialogs
 
                 if (topIntent != null)
                 {
-                    return await DialogByIntent(stepContext, topIntent);
-                }
-                else
-                {
-                    await stepContext.Context.SendActivityAsync("Ha ocurrido un error, intentelo de nuevo.");
+                    return topIntent.Value.intent == LuisServiceConfiguration.OkIntent
+                    ?  await stepContext.ReplaceDialogAsync(MainLuisDialog.Id, cancellationToken)
+                    :  await DialogByIntent(stepContext, topIntent);
                 }
 
-                return await stepContext.NextAsync();
+                await stepContext.Context.SendActivityAsync("Ha ocurrido un error, intentelo de nuevo.");
+                return await stepContext.EndDialogAsync();
+
             });
 
             AddStep(async (stepContext, cancellationToken) => { return await stepContext.EndDialogAsync(); });
