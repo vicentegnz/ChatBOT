@@ -21,7 +21,7 @@ namespace ChatBOT.Dialogs
             });
         }
 
-        public static string Id => "goodByeDialog";
+        public new static string Id => "goodByeDialog";
 
 
     }

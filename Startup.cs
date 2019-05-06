@@ -21,6 +21,9 @@ using Microsoft.Bot.Builder.Integration;
 using Microsoft.Extensions.Options;
 using Microsoft.Bot.Builder.Dialogs;
 using System.Linq;
+using BotServiceCollectionExtensions = ChatBOT.Core.Extensions.ServiceCollectionExtensions;
+using ChatBOT.Core.Extensions;
+using ChatBOT.Domain;
 
 namespace ChatBOT
 {
@@ -42,6 +45,14 @@ namespace ChatBOT
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            #region "Set Configuration"
+            services.AddConfiguration(BotServiceCollectionExtensions.ConfType.DegreeConfig, "Conf\\degree.json");
+            #endregion
+
+            #region "Configure"
+            services.Configure<DegreeConfigModel>(services.GetConfiguration(BotServiceCollectionExtensions.ConfType.DegreeConfig));
+            #endregion
+
             var secretKey = Configuration.GetSection("botFileSecret")?.Value;
             var botFilePath = Configuration.GetSection("botFilePath")?.Value;
 

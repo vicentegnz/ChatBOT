@@ -25,13 +25,16 @@ namespace ChatBOT.Bot
         public NexoBot(NexoBotAccessors nexoBotAccessors, BotServices services, 
             ISpellCheckService spellCheck,
             ISearchService searchService, 
-            ITeacherService teacherService)
+            ITeacherService teacherService,
+            ISubjectService subjectService)
         {
             var dialogState = nexoBotAccessors.DialogStateAccessor;
             _dialogs = new DialogSet(dialogState);
             _dialogs.Add(new MainLuisDialog(MainLuisDialog.Id, services));
-            _dialogs.Add(new QuestionDialog(QuestionDialog.Id, services, spellCheck,searchService));
+            _dialogs.Add(new QuestionDialog(QuestionDialog.Id, services, spellCheck, searchService));
             _dialogs.Add(new TeacherDialog(TeacherDialog.Id, teacherService));
+            _dialogs.Add(new SubjectDialog(SubjectDialog.Id, subjectService));
+
 
             //SOLO VISUALIZAN TEXTO
             //_dialogs.Add(new HelloDialog(HelloDialog.Id));

@@ -10,7 +10,7 @@ namespace ChatBOT.Domain
 
         public string Name { get; set; }
 
-        public string Code { get; set; }
+        public int Code { get; set; }
 
         public List<SubjectModel> Subjects { get; set; }
 
@@ -19,6 +19,20 @@ namespace ChatBOT.Domain
         public List<TeacherModel> Teachers { get; set; }
 
     }
+
+    public class StudyCenterModel
+    {
+
+        public string Name { get; set; }
+
+        public string UnexCode { get; set; }
+
+        public int Code { get; set; }
+
+        public List<DegreeModel> Degrees { get; set; }
+
+    }
+
 
     public class SubjectModel
     {
