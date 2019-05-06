@@ -1,7 +1,6 @@
 ﻿using ChatBOT.Core;
 using ChatBOT.Domain;
 using Microsoft.Azure.CognitiveServices.Search.WebSearch;
-using Microsoft.Azure.CognitiveServices.Search.WebSearch.Models;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,6 +8,7 @@ namespace ChatBOT.Services
 {
     public class BingSearchService : ISearchService
     {
+
         private const string API_KEY = "5528fa331bbb464fad299933388be24a";
 
         private readonly WebSearchClient _webSearchClient;

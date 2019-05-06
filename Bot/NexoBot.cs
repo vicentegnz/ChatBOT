@@ -1,52 +1,51 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using ChatBot.Services;
 using ChatBOT.Core;
-using ChatBOT.Domain;
+using ChatBOT.Dialogs;
+using ChatBOT.Services;
 using Microsoft.Bot.Builder;
+using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Schema;
 
 namespace ChatBOT.Bot
 {
     public class NexoBot : IBot
     {
-        #region "Consts"
-
-        private const string WelcomeText = "¿te puedo ayudar en algo?";
-        private const string LuisKey = "HelpService";
-        private const string QnaKey = "FrequentlyAskedQuestions";
-
-
-        private const string UNKNOWN_INTENT_LUIS = "None";
-
-
-        #endregion
-
         #region "Properties"
 
-        private readonly BotServices _services;
-        //private readonly ISpellCheckService _spellCheck;
-        private readonly ISearchService _searchService;
-
+        public NexoBotAccessors _nexoBotAccessors { get; }
+        private readonly DialogSet _dialogs;
+        
         #endregion
 
+
         #region "Constructor"
-        public NexoBot(BotServices services, ISpellCheckService spellCheck, ISearchService searchService)
+        public NexoBot(NexoBotAccessors nexoBotAccessors, BotServices services, 
+            ISpellCheckService spellCheck,
+            ISearchService searchService, 
+            ITeacherService teacherService)
         {
-            _services = services ?? throw new System.ArgumentNullException(nameof(services));
+            var dialogState = nexoBotAccessors.DialogStateAccessor;
+            _dialogs = new DialogSet(dialogState);
+            _dialogs.Add(new MainLuisDialog(MainLuisDialog.Id, services));
+            _dialogs.Add(new QuestionDialog(QuestionDialog.Id, services, spellCheck,searchService));
+            _dialogs.Add(new TeacherDialog(TeacherDialog.Id, teacherService));
 
-            if (!_services.LuisServices.ContainsKey(LuisKey))
-            {
-                throw new System.ArgumentException($"La configuración no es correcta. Por favor comprueba que existe en tu fichero '.bot' un servicio LUIS llamado '{LuisKey}'.");
-            }
+            //SOLO VISUALIZAN TEXTO
+            //_dialogs.Add(new HelloDialog(HelloDialog.Id));
+            _dialogs.Add(new HelpDialog(HelpDialog.Id));
+            _dialogs.Add(new LanguageNotValidDialog(LanguageNotValidDialog.Id));
+            _dialogs.Add(new GratitudeDialog(GratitudeDialog.Id));
+            _dialogs.Add(new GoodByeDialog(GoodByeDialog.Id));
+            _dialogs.Add(new NegationDialog(NegationDialog.Id));
 
-            if (!_services.QnAServices.ContainsKey(QnaKey))
-            {
-                throw new System.ArgumentException($"La configuración no es correcta.Por favor comprueba que existe en tu fichero '.bot' un servicio Qna llamado '{QnaKey}'.");
-            }
+            _dialogs.Add(new ChoicePrompt("choicePrompt"));
+            _dialogs.Add(new TextPrompt("textPrompt"));
+            _dialogs.Add(new NumberPrompt<int>("numberPrompt"));
 
-            //_spellCheck = spellCheck;
-            _searchService = searchService;
+            _nexoBotAccessors = nexoBotAccessors;
         }
 
         #endregion
@@ -55,69 +54,55 @@ namespace ChatBOT.Bot
 
         public async Task OnTurnAsync(ITurnContext turnContext, CancellationToken cancellationToken = default(CancellationToken))
         {
-            switch (turnContext.Activity.Type) {
+            if(turnContext.Activity.Type == ActivityTypes.Message)
+            { 
+                await _nexoBotAccessors.NexoBotStateStateAccessor.GetAsync(turnContext, () => new NexoBotState(), cancellationToken);
 
-                case ActivityTypes.Message:
+                turnContext.TurnState.Add("NexoBotAccessors", _nexoBotAccessors);
 
-                    //Spell Check 
-                    //turnContext.Activity.Text = _spellCheck.GetSpellCheckFromMessage(turnContext.Activity.Text);
-                
-                    //LUIS
-                    var recognizerResult = await _services.LuisServices[LuisKey].RecognizeAsync(turnContext, cancellationToken);
-                    var topIntent = recognizerResult?.GetTopScoringIntent();
-                    if (topIntent != null)
-                    {
-                        string message = string.Empty;
-                        if (topIntent.Value.intent == UNKNOWN_INTENT_LUIS)
-                        {
-                            //Qna
-                            var response = await _services.QnAServices[QnaKey].GetAnswersAsync(turnContext);
+                DialogContext dialogCtx = await _dialogs.CreateContextAsync(turnContext, cancellationToken);
+                DialogTurnResult results = await dialogCtx.ContinueDialogAsync(cancellationToken);
 
-                            if (response != null && response.Length > 0)
-                                message = response[0].Answer;
-                            else
-                            {
-                                //Bing Web Search
-                                SearchResponseModel searchResponse = await _searchService.GetResultFromSearch(turnContext.Activity.Text);
-                                if (searchResponse != null)
-                                    message = $"{searchResponse.Description}\n{searchResponse.Url}";
-                            }
-                        }
-                        else
-                        {
-                            switch (topIntent.Value.intent)
-                            {
-                                case "LenguajeNoAdecuado":
-                                    message = $"Disculpa, pero no tolero ese lenguaje, voy a tener que marcharme.";
-                                    break;
-                                case "Agradecimientos":
-                                    message = $"No tienes que agradecer nada, para eso estoy.";
-                                    break;
+                switch (results.Status)
+                {
+                    case DialogTurnStatus.Cancelled:
+                    case DialogTurnStatus.Empty:
+                        // If there is no active dialog, we should clear the user info and start a new dialog.
 
-                                default:
-                                    message = "No entiendo lo que me quiere decir.";
-                                    break;
-                                   
-                            }
-                        }
-
-                        await turnContext.SendActivityAsync(message);
-                    }
+                        await _nexoBotAccessors.NexoBotStateStateAccessor.SetAsync(turnContext, new NexoBotState(), cancellationToken);
+                        await _nexoBotAccessors.ConversationState.SaveChangesAsync(turnContext, false, cancellationToken);
+                        await dialogCtx.BeginDialogAsync(MainLuisDialog.Id, cancellationToken);
                         break;
 
-                case ActivityTypes.ConversationUpdate:
+                    case DialogTurnStatus.Complete:
+                        // If we just finished the dialog, capture and display the results.
+                        NexoBotState userInfo = results.Result as NexoBotState;
+                        await _nexoBotAccessors.NexoBotStateStateAccessor.SetAsync(turnContext, userInfo, cancellationToken);
+                        await _nexoBotAccessors.ConversationState.SaveChangesAsync(turnContext, false, cancellationToken);
+                        await dialogCtx.BeginDialogAsync(MainLuisDialog.Id, cancellationToken);
 
-                    if (turnContext.Activity.MembersAdded != null)
-                        await SendWelcomeMessageAsync(turnContext, cancellationToken);
+                        break;
+                    case DialogTurnStatus.Waiting:
+                        // If there is an active dialog, we don't need to do anything here.
+                        break;
+                }
 
-                    break;
+                await _nexoBotAccessors.ConversationState.SaveChangesAsync(turnContext, false, cancellationToken);
+
             }
+            //else
+            //{
+            //    if(turnContext.Activity.Type == ActivityTypes.ConversationUpdate && turnContext.Activity.MembersAdded != null)
+            //    {
+            //         await SendWelcomeMessageAsync(turnContext, cancellationToken);
+            //    }
+            //}
         }
 
         #endregion
 
-        #region "Private Methods"
 
+        #region "Private Methods"
         private static async Task SendWelcomeMessageAsync(ITurnContext turnContext, CancellationToken cancellationToken)
         {
             foreach (var member in turnContext.Activity.MembersAdded)
@@ -125,12 +110,15 @@ namespace ChatBOT.Bot
                 if (member.Id != turnContext.Activity.Recipient.Id)
                 {
                     await turnContext.SendActivityAsync(
-                        $"Hola {member.Name}, mi nombre es Nexo {WelcomeText}",
+                        $"Hola {member.Name}, soy Nexo 🤖 un asistente virtual de la Unex.",
                         cancellationToken: cancellationToken);
                 }
             }
         }
-       
+
         #endregion
+
+
+
     }
 }
