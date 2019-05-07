@@ -5,7 +5,6 @@ namespace ChatBOT.Conf
     {
         public const string LuisKey = "HelpService";
 
-        public const string ScheduleIntent = "Horario";
         public const string SubjectIntent = "Asignatura";
         public const string TeacherIntent = "Profesor";
         public const string LanguageNotValidIntent = "LenguajeNoAdecuado";

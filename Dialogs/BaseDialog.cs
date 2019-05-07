@@ -18,8 +18,6 @@ namespace ChatBOT.Dialogs
                     return await stepContext.BeginDialogAsync(SubjectDialog.Id);
                 case LuisServiceConfiguration.TeacherIntent:
                     return await stepContext.BeginDialogAsync(TeacherDialog.Id);
-                case LuisServiceConfiguration.ScheduleIntent:
-                    return await stepContext.BeginDialogAsync(ScheduleDialog.Id);
                 case LuisServiceConfiguration.UnknownIntent:
                     return await stepContext.BeginDialogAsync(QuestionDialog.Id);
                 case LuisServiceConfiguration.LanguageNotValidIntent:
