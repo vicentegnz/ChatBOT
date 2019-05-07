@@ -12,6 +12,10 @@ namespace ChatBOT.Domain
 
         public int Code { get; set; }
 
+        public string Url { get; set; }
+
+        public string Center { get; set; }
+
         public List<SubjectModel> Subjects { get; set; }
 
         public List<ExamModel> Exams { get; set; }
@@ -28,6 +32,12 @@ namespace ChatBOT.Domain
         public string UnexCode { get; set; }
 
         public int Code { get; set; }
+
+        public string Email { get; set; }
+
+        public string Telephone { get; set; }
+
+        public string Url { get; set; }
 
         public List<DegreeModel> Degrees { get; set; }
 
