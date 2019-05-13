@@ -46,7 +46,7 @@ namespace ChatBOT
         public void ConfigureServices(IServiceCollection services)
         {
             #region "Set Configuration"
-            services.AddConfiguration(BotServiceCollectionExtensions.ConfType.DegreeConfig, "Conf\\degree.json");
+            services.AddConfiguration(BotServiceCollectionExtensions.ConfType.DegreeConfig, "Conf\\opendata.json");
             #endregion
 
             #region "Configure"
@@ -67,9 +67,10 @@ namespace ChatBOT
             services.AddSingleton<ISpellCheckService, SpellCheckService>();
             services.AddSingleton<ISearchService, BingSearchService>();
             services.AddSingleton<ITeacherService, TeacherService>();
-            services.AddSingleton<IScheduleService, ScheduleService>();
-            services.AddSingleton<ISubjectService, SubjectService>();
-            
+
+            services.AddTransient<IOpenDataService, OpenDataService>();
+            services.AddTransient<IOpenDataService, OpenDataCacheService>();
+
             services.AddBot<NexoBot>(Options =>
             {
                 var conversationState = new ConversationState(new MemoryStorage());

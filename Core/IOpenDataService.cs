@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace ChatBOT.Core
 {
-    public interface ISubjectService
+    public interface IOpenDataService
     {
         List<StudyCenterModel> GetStudyCenters();
-        List<DegreeModel> GetDegrees();
-        List<SubjectModel> GetSubjectbyDegreeCode();
     }
 }

@@ -48,11 +48,12 @@ namespace ChatBOT.Domain
     {
         public int Code { get; set; }
         public string Name { get; set; }
-        public string Area { get; set; }
+        public string Caracter { get; set; }
         public int Ects { get; set; }
-        public int Semester { get; set; }
+        public string Semester { get; set; }
         public string InfoUrl { get; set; }
-
+        public string Degree { get; set; }
+        public int Students { get; set; }
     }
     public class ExamModel
     {
