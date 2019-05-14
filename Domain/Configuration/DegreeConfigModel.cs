@@ -12,7 +12,9 @@ namespace ChatBOT.Domain
         public string DegreesQuery { get; set; }
         public string SubjectsQuery { get; set; }
         public List<StudyCentreConfigModel> StudyCentres { get; set; }
-        public string PathAbsoluteFrom12A { get; set; } 
+        public string PathAbsoluteFrom12A { get; set; }
+        public string PathAbsoluteCenter { get; set; }
+        public string PathAbsoluteDegree { get; set; }
     }
 
 

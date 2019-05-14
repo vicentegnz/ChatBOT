@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ChatBot.Services;
@@ -22,18 +23,19 @@ namespace ChatBOT.Bot
 
 
         #region "Constructor"
-        public NexoBot(NexoBotAccessors nexoBotAccessors, BotServices services, 
+        public NexoBot(NexoBotAccessors nexoBotAccessors, 
+            BotServices services, 
             ISpellCheckService spellCheck,
             ISearchService searchService, 
             ITeacherService teacherService,
-            IOpenDataService openDataService)
+            IEnumerable<IOpenDataService> openDataService)
         {
             var dialogState = nexoBotAccessors.DialogStateAccessor;
             _dialogs = new DialogSet(dialogState);
             _dialogs.Add(new MainLuisDialog(MainLuisDialog.Id, services));
             _dialogs.Add(new QuestionDialog(QuestionDialog.Id, services, spellCheck, searchService));
             _dialogs.Add(new TeacherDialog(TeacherDialog.Id, teacherService));
-            _dialogs.Add(new SubjectDialog(SubjectDialog.Id, openDataService));
+            _dialogs.Add(new SubjectDialog(SubjectDialog.Id, openDataService.FirstOrDefault(x => x.GetType() == typeof(OpenDataCacheService))));
 
 
             //SOLO VISUALIZAN TEXTO

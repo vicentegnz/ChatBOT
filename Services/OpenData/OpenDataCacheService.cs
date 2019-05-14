@@ -16,18 +16,17 @@ namespace ChatBOT.Services
 
         public OpenDataCacheService(IServiceProvider serviceProvider)
         {
-            _openDataService = serviceProvider.GetRequiredService<OpenDataService>();
+            _openDataService = serviceProvider.GetService<OpenDataService>();
         }
 
         public List<StudyCenterModel> GetStudyCenters()
         {
-            var centers = CenterOpenDataInfo.GetCentersModel();
+            var centers = OpenDataInfoCache.GetCentersModel();
 
-            if (!centers.Any())
+            if (centers == null)
             {
                 centers = _openDataService.GetStudyCenters();
-
-                CenterOpenDataInfo.SetCentersModel(centers);
+                OpenDataInfoCache.SetCentersModel(centers);
             }
 
             return centers;

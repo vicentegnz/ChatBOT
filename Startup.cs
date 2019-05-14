@@ -45,6 +45,11 @@ namespace ChatBOT
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            //Framework services
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddAutoMapper();
+
             #region "Set Configuration"
             services.AddConfiguration(BotServiceCollectionExtensions.ConfType.DegreeConfig, "Conf\\opendata.json");
             #endregion
@@ -67,9 +72,8 @@ namespace ChatBOT
             services.AddSingleton<ISpellCheckService, SpellCheckService>();
             services.AddSingleton<ISearchService, BingSearchService>();
             services.AddSingleton<ITeacherService, TeacherService>();
-
-            services.AddTransient<IOpenDataService, OpenDataService>();
-            services.AddTransient<IOpenDataService, OpenDataCacheService>();
+            services.AddSingleton<OpenDataService>();
+            services.AddSingleton<IOpenDataService, OpenDataCacheService>();
 
             services.AddBot<NexoBot>(Options =>
             {
@@ -93,8 +97,6 @@ namespace ChatBOT
 
             });
             
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddAutoMapper();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

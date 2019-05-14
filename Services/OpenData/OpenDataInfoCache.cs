@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace ChatBOT.Services.OpenData
 {
-    public static class CenterOpenDataInfo
+    public static class OpenDataInfoCache
     {
 
         private static List<StudyCenterModel> centersModel;

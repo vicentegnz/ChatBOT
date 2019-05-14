@@ -10,7 +10,7 @@ namespace ChatBOT.Services
 {
     public class OpenDataService : IOpenDataService
     {
-
+        //COMUN
         private const string TAG_VALUE = "value";
         private const string TAG_RESULTS = "results";
         private const string TAG_BINDINGS = "bindings";
@@ -18,8 +18,6 @@ namespace ChatBOT.Services
         //CENTERS
         private const string TAG_CENTER_CODE = "ou_codCentro";
         private const string TAG_CENTER_NAME = "foaf_name";
-        private const string TAG_CENTER_URL = "schema_url";
-        private const string TAG_CENTER_DEGREE = "uri";
         private const string TAG_CENTER_EMAIL = "schema_email";
         private const string TAG_CENTER_TELEPHONE = "schema_telephone";
 
@@ -33,7 +31,6 @@ namespace ChatBOT.Services
         private const string TAG_SUBJECT_NAME = "teach_courseTitle";
         private const string TAG_SUBJECT_DEGREE = "titulacion";
         private const string TAG_SUBJECT_ECTS = "teach_ects";
-        private const string TAG_SUBJECT_STUDENTS = "ou_numeroMatriculados";
         private const string TAG_SUBJECT_CHARACTER = "ou_caracterAsignatura";
         private const string TAG_SUBJECT_TIME = "ou_temporalidadAsignatura";
 
@@ -61,8 +58,14 @@ namespace ChatBOT.Services
             var subjects = GetSubjects();
             foreach (var degree in GetDegrees())
             {
-                degree.Subjects.AddRange(subjects.Where(x => x.Degree.Equals(degree.Name)));
-                centers.FirstOrDefault(x => x.Name.Equals(degree.Center))?.Degrees.Add(degree);
+                var center = centers.FirstOrDefault(x => x.Name.Equals(degree.Center));
+                if(center != null) {
+                    degree.Url = string.Format(_degreeConfigModel.PathAbsoluteDegree, center.UnexCode, degree.Code.ToString("D4"));
+                    degree.Subjects.AddRange(subjects
+                        .Where(x => x.Degree.Equals(degree.Name))
+                        .Select(c => { c.InfoUrl = string.Format(_degreeConfigModel.PathAbsoluteFrom12A, center.UnexCode, degree.Code.ToString("D4"), c.Code); return c; }));
+                    center.Degrees.Add(degree);
+                }
             }
 
             return centers;
@@ -84,7 +87,7 @@ namespace ChatBOT.Services
                     Code = (int)center[TAG_CENTER_CODE][TAG_VALUE],
                     Name = (string)center[TAG_CENTER_NAME][TAG_VALUE],
                     UnexCode = unexCode,
-                    //Url = (string)center[TAG_CENTER_URL][TAG_VALUE],
+                    Url = string.Format(_degreeConfigModel.PathAbsoluteCenter, unexCode),
                     Telephone = (string)center[TAG_CENTER_TELEPHONE][TAG_VALUE],
                     Email = (string)center[TAG_CENTER_EMAIL][TAG_VALUE],
                     Degrees = new List<DegreeModel>()
