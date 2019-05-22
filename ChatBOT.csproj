@@ -38,7 +38,6 @@
     <PackageReference Include="Microsoft.Bot.Builder.AI.QnA" Version="4.4.3" />
     <PackageReference Include="Microsoft.Bot.Builder.Dialogs" Version="4.4.3" />
     <PackageReference Include="Microsoft.Bot.Builder.Integration.AspNet.Core" Version="4.4.3" />
-    <PackageReference Include="Microsoft.Bot.Builder.Integration.AspNet.WebApi" Version="4.4.3" />
     <PackageReference Include="Microsoft.Bot.Configuration" Version="4.4.3" />
     <PackageReference Include="Microsoft.ML" Version="0.7.0" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="4.7.0" />
