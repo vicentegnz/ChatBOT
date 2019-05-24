@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Bot.Builder.BotFramework;
-using Microsoft.Bot.Builder.Integration.AspNet.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ChatBOT.Bot;
@@ -21,6 +19,13 @@ using Microsoft.Bot.Builder.Integration;
 using Microsoft.Extensions.Options;
 using Microsoft.Bot.Builder.Dialogs;
 using System.Linq;
+using BotServiceCollectionExtensions = ChatBOT.Core.Extensions.ServiceCollectionExtensions;
+
+using ChatBOT.Core.Extensions;
+using ChatBOT.Domain;
+using Microsoft.Bot.Builder.BotFramework;
+using Microsoft.Bot.Builder.Integration.AspNet.Core;
+using ChatBOT.Core.Errors;
 
 namespace ChatBOT
 {
@@ -42,6 +47,19 @@ namespace ChatBOT
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            //Framework services
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddAutoMapper();
+
+            #region "Set Configuration"
+            services.AddConfiguration(BotServiceCollectionExtensions.ConfType.DegreeConfig, "Conf\\opendata.json");
+            #endregion
+
+            #region "Configure"
+            services.Configure<DegreeConfigModel>(services.GetConfiguration(BotServiceCollectionExtensions.ConfType.DegreeConfig));
+            #endregion
+
             var secretKey = Configuration.GetSection("botFileSecret")?.Value;
             var botFilePath = Configuration.GetSection("botFilePath")?.Value;
 
@@ -53,12 +71,15 @@ namespace ChatBOT
             var connectedServices = new BotServices(botConfig);
             services.AddSingleton(sp => connectedServices);
 
+            services.AddSingleton<IBotFrameworkHttpAdapter, AdapterWithErrorHandler>();
+
+
             services.AddSingleton<ISpellCheckService, SpellCheckService>();
             services.AddSingleton<ISearchService, BingSearchService>();
             services.AddSingleton<ITeacherService, TeacherService>();
-            services.AddSingleton<IScheduleService, ScheduleService>();
-            services.AddSingleton<ISubjectService, SubjectService>();
-            
+            services.AddSingleton<OpenDataService>();
+            services.AddSingleton<IOpenDataService, OpenDataCacheService>();
+
             services.AddBot<NexoBot>(Options =>
             {
                 var conversationState = new ConversationState(new MemoryStorage());
@@ -81,13 +102,20 @@ namespace ChatBOT
 
             });
             
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddAutoMapper();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseHsts();
+            }
+
             env.ConfigureNLog("Conf/nlog.config");
             loggerFactory.AddNLog();
 

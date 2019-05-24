@@ -18,6 +18,6 @@ namespace ChatBOT.Dialogs
             });
         }
 
-        public static string Id => "gratitudeDialog";
+        public new static string Id => "gratitudeDialog";
     }
 }

@@ -12,11 +12,6 @@ namespace ChatBOT.Dialogs
 {
     public sealed class HelpDialog : BaseDialog
     {
-
-        #region "Properties"
-        private readonly ILanguageService _helpService;
-        #endregion
-
         public HelpDialog(string dialogId, IEnumerable<WaterfallStep> steps = null) : base(dialogId, steps)
         {
 

@@ -41,8 +41,6 @@ namespace ChatBOT.Dialogs
                         return await stepContext.BeginDialogAsync(SubjectDialog.Id);
                     case TEACHER_CHOICE:
                         return await stepContext.BeginDialogAsync(TeacherDialog.Id);
-                    case SCHEDULE_CHOICE:
-                        return await stepContext.BeginDialogAsync(ScheduleDialog.Id);
                     case QUESTION_CHOICE:
                         return await stepContext.BeginDialogAsync(QuestionDialog.Id);
                     default:

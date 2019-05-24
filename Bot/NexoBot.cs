@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ChatBot.Services;
@@ -7,6 +9,7 @@ using ChatBOT.Dialogs;
 using ChatBOT.Services;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Bot.Builder.Dialogs.Choices;
 using Microsoft.Bot.Schema;
 
 namespace ChatBOT.Bot
@@ -22,26 +25,32 @@ namespace ChatBOT.Bot
 
 
         #region "Constructor"
-        public NexoBot(NexoBotAccessors nexoBotAccessors, BotServices services, 
+        public NexoBot(NexoBotAccessors nexoBotAccessors, 
+            BotServices services, 
             ISpellCheckService spellCheck,
             ISearchService searchService, 
-            ITeacherService teacherService)
+            ITeacherService teacherService,
+            IEnumerable<IOpenDataService> openDataService)
         {
             var dialogState = nexoBotAccessors.DialogStateAccessor;
             _dialogs = new DialogSet(dialogState);
             _dialogs.Add(new MainLuisDialog(MainLuisDialog.Id, services));
-            _dialogs.Add(new QuestionDialog(QuestionDialog.Id, services, spellCheck,searchService));
+            _dialogs.Add(new QuestionDialog(QuestionDialog.Id, services, spellCheck, searchService));
             _dialogs.Add(new TeacherDialog(TeacherDialog.Id, teacherService));
+            _dialogs.Add(new SubjectDialog(SubjectDialog.Id, openDataService.FirstOrDefault(x => x.GetType() == typeof(OpenDataCacheService))));
+
 
             //SOLO VISUALIZAN TEXTO
-            //_dialogs.Add(new HelloDialog(HelloDialog.Id));
             _dialogs.Add(new HelpDialog(HelpDialog.Id));
             _dialogs.Add(new LanguageNotValidDialog(LanguageNotValidDialog.Id));
             _dialogs.Add(new GratitudeDialog(GratitudeDialog.Id));
             _dialogs.Add(new GoodByeDialog(GoodByeDialog.Id));
             _dialogs.Add(new NegationDialog(NegationDialog.Id));
 
-            _dialogs.Add(new ChoicePrompt("choicePrompt"));
+            ChoicePrompt choicePrompt = new ChoicePrompt("choicePrompt");
+            choicePrompt.ChoiceOptions = new ChoiceFactoryOptions { IncludeNumbers = false };
+            choicePrompt.RecognizerOptions = new FindChoicesOptions { AllowPartialMatches = true };
+            _dialogs.Add(choicePrompt);
             _dialogs.Add(new TextPrompt("textPrompt"));
             _dialogs.Add(new NumberPrompt<int>("numberPrompt"));
 
@@ -54,49 +63,43 @@ namespace ChatBOT.Bot
 
         public async Task OnTurnAsync(ITurnContext turnContext, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if(turnContext.Activity.Type == ActivityTypes.Message)
-            { 
-                await _nexoBotAccessors.NexoBotStateStateAccessor.GetAsync(turnContext, () => new NexoBotState(), cancellationToken);
-
-                turnContext.TurnState.Add("NexoBotAccessors", _nexoBotAccessors);
-
-                DialogContext dialogCtx = await _dialogs.CreateContextAsync(turnContext, cancellationToken);
-                DialogTurnResult results = await dialogCtx.ContinueDialogAsync(cancellationToken);
-
-                switch (results.Status)
+            
+                if (turnContext.Activity.Type == ActivityTypes.Message)
                 {
-                    case DialogTurnStatus.Cancelled:
-                    case DialogTurnStatus.Empty:
-                        // If there is no active dialog, we should clear the user info and start a new dialog.
+                    await _nexoBotAccessors.NexoBotStateStateAccessor.GetAsync(turnContext, () => new NexoBotState(), cancellationToken);
 
-                        await _nexoBotAccessors.NexoBotStateStateAccessor.SetAsync(turnContext, new NexoBotState(), cancellationToken);
-                        await _nexoBotAccessors.ConversationState.SaveChangesAsync(turnContext, false, cancellationToken);
-                        await dialogCtx.BeginDialogAsync(MainLuisDialog.Id, cancellationToken);
-                        break;
+                    turnContext.TurnState.Add("NexoBotAccessors", _nexoBotAccessors);
 
-                    case DialogTurnStatus.Complete:
-                        // If we just finished the dialog, capture and display the results.
-                        NexoBotState userInfo = results.Result as NexoBotState;
-                        await _nexoBotAccessors.NexoBotStateStateAccessor.SetAsync(turnContext, userInfo, cancellationToken);
-                        await _nexoBotAccessors.ConversationState.SaveChangesAsync(turnContext, false, cancellationToken);
-                        await dialogCtx.BeginDialogAsync(MainLuisDialog.Id, cancellationToken);
+                    DialogContext dialogCtx = await _dialogs.CreateContextAsync(turnContext, cancellationToken);
+                    DialogTurnResult results = await dialogCtx.ContinueDialogAsync(cancellationToken);
 
-                        break;
-                    case DialogTurnStatus.Waiting:
-                        // If there is an active dialog, we don't need to do anything here.
-                        break;
+                    switch (results.Status)
+                    {
+                        case DialogTurnStatus.Cancelled:
+                        case DialogTurnStatus.Empty:
+                            // If there is no active dialog, we should clear the user info and start a new dialog.
+
+                            await _nexoBotAccessors.NexoBotStateStateAccessor.SetAsync(turnContext, new NexoBotState(), cancellationToken);
+                            await _nexoBotAccessors.ConversationState.SaveChangesAsync(turnContext, false, cancellationToken);
+                            await dialogCtx.BeginDialogAsync(MainLuisDialog.Id, cancellationToken);
+                            break;
+
+                        case DialogTurnStatus.Complete:
+                            // If we just finished the dialog, capture and display the results.
+                            NexoBotState userInfo = results.Result as NexoBotState;
+                            await _nexoBotAccessors.NexoBotStateStateAccessor.SetAsync(turnContext, userInfo, cancellationToken);
+                            await _nexoBotAccessors.ConversationState.SaveChangesAsync(turnContext, false, cancellationToken);
+                            await dialogCtx.BeginDialogAsync(MainLuisDialog.Id, cancellationToken);
+
+                            break;
+                        case DialogTurnStatus.Waiting:
+                            // If there is an active dialog, we don't need to do anything here.
+                            break;
+                    }
+
+                    await _nexoBotAccessors.ConversationState.SaveChangesAsync(turnContext, false, cancellationToken);
+
                 }
-
-                await _nexoBotAccessors.ConversationState.SaveChangesAsync(turnContext, false, cancellationToken);
-
-            }
-            //else
-            //{
-            //    if(turnContext.Activity.Type == ActivityTypes.ConversationUpdate && turnContext.Activity.MembersAdded != null)
-            //    {
-            //         await SendWelcomeMessageAsync(turnContext, cancellationToken);
-            //    }
-            //}
         }
 
         #endregion
