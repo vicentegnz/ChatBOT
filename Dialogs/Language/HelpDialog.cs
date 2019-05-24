@@ -18,7 +18,7 @@ namespace ChatBOT.Dialogs
             AddStep(async (stepContext, cancellationToken) =>
             {
                 await stepContext.Context.SendActivityAsync("Las cosas que puedo hacer son, consultar la ficha de una asignatura , información de un profesor, como puede ser su horario de tutoria, el horario del grado, y cualquier otra consulta relacionada con la UNEX.");
-                return await stepContext.BeginDialogAsync(MainLuisDialog.Id, cancellationToken);
+                return await stepContext.BeginDialogAsync(MainLuisDialog.Id, null, cancellationToken);
             });
         }
 

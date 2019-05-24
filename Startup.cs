@@ -26,6 +26,9 @@ using ChatBOT.Domain;
 using Microsoft.Bot.Builder.BotFramework;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;
 using ChatBOT.Core.Errors;
+using System.IO;
+using Microsoft.Bot.Builder.Dialogs.Declarative.Resources;
+using Microsoft.Bot.Connector.Authentication;
 
 namespace ChatBOT
 {
@@ -73,12 +76,12 @@ namespace ChatBOT
 
             services.AddSingleton<IBotFrameworkHttpAdapter, AdapterWithErrorHandler>();
 
-
             services.AddSingleton<ISpellCheckService, SpellCheckService>();
             services.AddSingleton<ISearchService, BingSearchService>();
             services.AddSingleton<ITeacherService, TeacherService>();
             services.AddSingleton<OpenDataService>();
             services.AddSingleton<IOpenDataService, OpenDataCacheService>();
+            services.AddSingleton<ICredentialProvider, ConfigurationCredentialProvider>();
 
             services.AddBot<NexoBot>(Options =>
             {
@@ -101,21 +104,18 @@ namespace ChatBOT
                 return accessors;
 
             });
-            
+
+            var resourceExplorer = ResourceExplorer.LoadProject(Directory.GetCurrentDirectory(), ignoreFolders: new string[] { "models" });
+            services.AddSingleton(resourceExplorer);
+
         }
+
+
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseHsts();
-            }
-
             env.ConfigureNLog("Conf/nlog.config");
             loggerFactory.AddNLog();
 

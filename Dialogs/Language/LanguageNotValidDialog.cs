@@ -22,7 +22,7 @@ namespace ChatBOT.Dialogs
             AddStep(async (stepContext, cancellationToken) =>
             {
                 await stepContext.Context.SendActivityAsync($"El lenguage que estás utilizando no es el adecuado.");
-                return await stepContext.BeginDialogAsync(MainLuisDialog.Id, cancellationToken);
+                return await stepContext.BeginDialogAsync(MainLuisDialog.Id, null, cancellationToken);
             });
         }
 

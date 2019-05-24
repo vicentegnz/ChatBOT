@@ -79,7 +79,7 @@ namespace ChatBOT.Dialogs
 
                 await stepContext.Context.SendActivityAsync($"Aquí tienes la página web donde encontraras mucha información de esta asignatura. {state.SubjectModel.InfoUrl}");
 
-                return await stepContext.ReplaceDialogAsync(MainLuisDialog.Id, cancellationToken);
+                return await stepContext.ReplaceDialogAsync(MainLuisDialog.Id, null, cancellationToken);
 
             });
 

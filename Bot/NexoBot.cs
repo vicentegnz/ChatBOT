@@ -81,7 +81,7 @@ namespace ChatBOT.Bot
 
                             await _nexoBotAccessors.NexoBotStateStateAccessor.SetAsync(turnContext, new NexoBotState(), cancellationToken);
                             await _nexoBotAccessors.ConversationState.SaveChangesAsync(turnContext, false, cancellationToken);
-                            await dialogCtx.BeginDialogAsync(MainLuisDialog.Id, cancellationToken);
+                            await dialogCtx.BeginDialogAsync(MainLuisDialog.Id, null, cancellationToken);
                             break;
 
                         case DialogTurnStatus.Complete:
@@ -89,7 +89,7 @@ namespace ChatBOT.Bot
                             NexoBotState userInfo = results.Result as NexoBotState;
                             await _nexoBotAccessors.NexoBotStateStateAccessor.SetAsync(turnContext, userInfo, cancellationToken);
                             await _nexoBotAccessors.ConversationState.SaveChangesAsync(turnContext, false, cancellationToken);
-                            await dialogCtx.BeginDialogAsync(MainLuisDialog.Id, cancellationToken);
+                            await dialogCtx.BeginDialogAsync(MainLuisDialog.Id, null, cancellationToken);
 
                             break;
                         case DialogTurnStatus.Waiting:

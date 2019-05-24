@@ -87,7 +87,7 @@ namespace ChatBOT.Dialogs
                 if (topIntent == null) return await stepContext.EndDialogAsync();
 
                 return topIntent.Value.intent == LuisServiceConfiguration.OkIntent
-                    ? await stepContext.ReplaceDialogAsync(MainLuisDialog.Id, cancellationToken)
+                    ? await stepContext.ReplaceDialogAsync(MainLuisDialog.Id, null, cancellationToken)
                     : await DialogByIntent(stepContext, topIntent);
             });
             
@@ -112,7 +112,7 @@ namespace ChatBOT.Dialogs
                 if (topIntent == null) return await stepContext.EndDialogAsync();
 
                 return topIntent.Value.intent == LuisServiceConfiguration.OkIntent
-                    ? await stepContext.ReplaceDialogAsync(MainLuisDialog.Id, cancellationToken)
+                    ? await stepContext.ReplaceDialogAsync(MainLuisDialog.Id, null, cancellationToken)
                     : await DialogByIntent(stepContext, topIntent);
 
 

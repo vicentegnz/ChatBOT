@@ -56,7 +56,7 @@ namespace ChatBOT.Dialogs
                             if (teachersSearched.Count == 1)
                             {
                                 await stepContext.Context.SendActivityAsync($"En esta dirección encontrarás toda su información {teachersSearched.FirstOrDefault().InfoUrl}.");
-                                return await stepContext.ReplaceDialogAsync(MainLuisDialog.Id, cancellationToken);
+                                return await stepContext.ReplaceDialogAsync(MainLuisDialog.Id, null, cancellationToken);
                             }
 
                             var choices = new List<Choice>();
@@ -92,12 +92,12 @@ namespace ChatBOT.Dialogs
                     if (teachersSearched.Any())
                     { 
                         await stepContext.Context.SendActivityAsync($"En esta dirección encontrarás toda su información {teachersSearched.FirstOrDefault().InfoUrl}.");
-                        return await stepContext.ReplaceDialogAsync(MainLuisDialog.Id, cancellationToken);
+                        return await stepContext.ReplaceDialogAsync(MainLuisDialog.Id, null, cancellationToken);
                     }
                     else
                     { 
                         await stepContext.Context.SendActivityAsync($"No tengo ningun profesor con esos datos.");
-                        return await stepContext.ReplaceDialogAsync(TeacherDialog.Id, cancellationToken);
+                        return await stepContext.ReplaceDialogAsync(TeacherDialog.Id, null, cancellationToken);
                     }
                 });
 
