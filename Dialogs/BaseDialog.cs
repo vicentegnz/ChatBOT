@@ -5,33 +5,33 @@ using System.Threading.Tasks;
 
 namespace ChatBOT.Dialogs
 {
-    public class BaseDialog : WaterfallDialog
+    public class BaseDialog : ComponentDialog
     {
-        public BaseDialog(string dialogId, IEnumerable<WaterfallStep> steps = null) : base(dialogId, steps)
+        public BaseDialog(string dialogId, IEnumerable<WaterfallStep> steps = null) : base(dialogId ?? nameof(BaseDialog))
         {
         }
-        public static async Task<DialogTurnResult> DialogByIntent(WaterfallStepContext stepContext, (string intent, double score)? topIntent)
+        public async Task<DialogTurnResult> DialogByIntent(WaterfallStepContext stepContext, (string intent, double score)? topIntent)
         {
             switch (topIntent.Value.intent)
             {
                 case LuisServiceConfiguration.SubjectIntent:
-                    return await stepContext.BeginDialogAsync(SubjectDialog.Id);
+                    return await stepContext.BeginDialogAsync(nameof(SubjectDialog));
                 case LuisServiceConfiguration.TeacherIntent:
-                    return await stepContext.BeginDialogAsync(TeacherDialog.Id);
+                    return await stepContext.BeginDialogAsync(nameof(TeacherDialog));
                 case LuisServiceConfiguration.UnknownIntent:
-                    return await stepContext.BeginDialogAsync(QuestionDialog.Id);
+                    return await stepContext.BeginDialogAsync(nameof(QuestionDialog));
                 case LuisServiceConfiguration.LanguageNotValidIntent:
-                    return await stepContext.BeginDialogAsync(LanguageNotValidDialog.Id);
+                    return await stepContext.BeginDialogAsync(nameof(LanguageNotValidDialog));
                 case LuisServiceConfiguration.GreetinsIntent:
-                    return await stepContext.BeginDialogAsync(GratitudeDialog.Id);
+                    return await stepContext.BeginDialogAsync(nameof(GratitudeDialog));
                 case LuisServiceConfiguration.HelpIntent:
-                    return await stepContext.BeginDialogAsync(HelpDialog.Id);
+                    return await stepContext.BeginDialogAsync(nameof(HelpDialog));
                 case LuisServiceConfiguration.GoodByeIntent:
-                    return await stepContext.BeginDialogAsync(GoodByeDialog.Id);
+                    return await stepContext.BeginDialogAsync(nameof(GoodByeDialog));
                 case LuisServiceConfiguration.NotIntent:
-                    return await stepContext.BeginDialogAsync(NegationDialog.Id);
+                    return await stepContext.BeginDialogAsync(nameof(NegationDialog));
                 default:
-                    return await stepContext.BeginDialogAsync(MainLuisDialog.Id);
+                    return await stepContext.BeginDialogAsync(nameof(MainLuisDialog));
             }
         }
     }

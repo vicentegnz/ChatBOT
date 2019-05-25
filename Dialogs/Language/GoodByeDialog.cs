@@ -3,6 +3,7 @@ using Microsoft.Bot.Builder.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ChatBOT.Dialogs
@@ -11,18 +12,19 @@ namespace ChatBOT.Dialogs
     {
         
 
-        public GoodByeDialog(string dialogId, IEnumerable<WaterfallStep> steps = null) : base(dialogId, steps)
+        public GoodByeDialog(string dialogId, IEnumerable<WaterfallStep> steps = null) : base(dialogId)
         {
-            AddStep(async (stepContext, cancellationToken) =>
-            {
-                await stepContext.Context.SendActivityAsync(@"Hasta luego, espero haberte ayudado.");
+            AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[] { SendMessageStepAsync }));
+            InitialDialogId = nameof(WaterfallDialog);
 
-                return await stepContext.EndDialogAsync();
-            });
         }
 
-        public new static string Id => "goodByeDialog";
+        private async Task<DialogTurnResult> SendMessageStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        {
+            await stepContext.Context.SendActivityAsync(@"Hasta luego, espero haberte ayudado.");
 
-
+            return await stepContext.EndDialogAsync();
+        }
+        
     }
 }

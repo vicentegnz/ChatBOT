@@ -26,6 +26,10 @@ using ChatBOT.Domain;
 using Microsoft.Bot.Builder.BotFramework;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;
 using ChatBOT.Core.Errors;
+using System.IO;
+using Microsoft.Bot.Builder.Dialogs.Declarative.Resources;
+using Microsoft.Bot.Connector.Authentication;
+using ChatBOT.Dialogs;
 
 namespace ChatBOT
 {
@@ -71,8 +75,6 @@ namespace ChatBOT
             var connectedServices = new BotServices(botConfig);
             services.AddSingleton(sp => connectedServices);
 
-            services.AddSingleton<IBotFrameworkHttpAdapter, AdapterWithErrorHandler>();
-
 
             services.AddSingleton<ISpellCheckService, SpellCheckService>();
             services.AddSingleton<ISearchService, BingSearchService>();
@@ -80,48 +82,44 @@ namespace ChatBOT
             services.AddSingleton<OpenDataService>();
             services.AddSingleton<IOpenDataService, OpenDataCacheService>();
 
-            services.AddBot<NexoBot>(Options =>
-            {
-                var conversationState = new ConversationState(new MemoryStorage());
-                Options.State.Add(conversationState);
-                Options.CredentialProvider = new ConfigurationCredentialProvider(Configuration);
-            });
 
-            services.AddSingleton(serviceProvider => {
 
-                var options = serviceProvider.GetRequiredService<IOptions<BotFrameworkOptions>>().Value;
-                var conversationState = options.State.OfType<ConversationState>().FirstOrDefault();
+            services.AddSingleton<ICredentialProvider, ConfigurationCredentialProvider>();
+            services.AddSingleton<IBotFrameworkHttpAdapter, AdapterWithErrorHandler>();
 
-                var accessors = new NexoBotAccessors(conversationState)
-                {
-                    DialogStateAccessor = conversationState.CreateProperty<DialogState>(NexoBotAccessors.DialogStateAccessorName),
-                    NexoBotStateStateAccessor = conversationState.CreateProperty<NexoBotState>(NexoBotAccessors.NexoBotStateAccesorName),
-                };
+            //Create the storage we'll be using for User and Conversation state. (Memory is great for testing purposes.)
+            services.AddSingleton<IStorage, MemoryStorage>();
 
-                return accessors;
+            // Create the User state. (Used in this bot's Dialog implementation.)
+            services.AddSingleton<UserState>();
 
-            });
-            
+            // Create the Conversation state. (Used by the Dialog system itself.)
+            services.AddSingleton<ConversationState>();
+
+            // The Dialog that will be run by the bot.
+            services.AddSingleton<MainLuisDialog>();
+
+            // Create the bot as a transient. In this case the ASP Controller is expecting an IBot.
+            services.AddTransient<IBot, NexoBot<MainLuisDialog>>();
+           
+            var resourceExplorer = ResourceExplorer.LoadProject(Directory.GetCurrentDirectory(), ignoreFolders: new string[] { "models" });
+            services.AddSingleton(resourceExplorer);
+
         }
+
+
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseHsts();
-            }
-
             env.ConfigureNLog("Conf/nlog.config");
             loggerFactory.AddNLog();
 
             app.UseDefaultFiles()
                 .UseStaticFiles()
-                .UseBotFramework();
+                .UseMvc();
+            ;
         }
     }
 }

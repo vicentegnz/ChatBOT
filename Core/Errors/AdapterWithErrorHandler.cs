@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;
+using Microsoft.Bot.Builder.LanguageGeneration;
 using Microsoft.Bot.Connector.Authentication;
 using Microsoft.Extensions.Logging;
 
@@ -8,16 +10,23 @@ namespace ChatBOT.Core.Errors
 {
     public class AdapterWithErrorHandler : BotFrameworkHttpAdapter
     {
+        private readonly TemplateEngine _lgEngine;
+
         public AdapterWithErrorHandler(ICredentialProvider credentialProvider, ILogger<BotFrameworkHttpAdapter> logger, ConversationState conversationState = null)
             : base(credentialProvider)
         {
+            // combine path for cross platform support
+            string[] paths = { ".","Core" ,"Errors","AdapterWithErrorHandler.LG" };
+            string fullPath = Path.Combine(paths);
+            _lgEngine = TemplateEngine.FromFiles(fullPath);
+
             OnTurnError = async (turnContext, exception) =>
             {
                 // Log any leaked exception from the application.
                 logger.LogError($"Exception caught : {exception.Message}");
 
                 // Send a catch-all apology to the user.
-                await turnContext.SendActivityAsync("Sorry, it looks like something went wrong.");
+                await turnContext.SendActivityAsync(_lgEngine.EvaluateTemplate("SomethingWentWrong", null));
 
                 if (conversationState != null)
                 {
