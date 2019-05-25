@@ -2,22 +2,25 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ChatBOT.Dialogs
 {
     public class GratitudeDialog : BaseDialog
     {
-        public GratitudeDialog(string dialogId, IEnumerable<WaterfallStep> steps = null) : base(dialogId, steps)
+        public GratitudeDialog(string dialogId) : base(dialogId)
         {
-            AddStep(async (stepContext, cancellationToken) =>
-            {
-                await stepContext.Context.SendActivityAsync("No tienes porque agradecerlo, para eso estamos.");
+            AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]{ SendMessageStepAsync }));
+            InitialDialogId = nameof(WaterfallDialog);
 
-                return await stepContext.BeginDialogAsync(MainLuisDialog.Id, null, cancellationToken);
-            });
         }
 
-        public new static string Id => "gratitudeDialog";
+        private async Task<DialogTurnResult> SendMessageStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        {
+            await stepContext.Context.SendActivityAsync("No tienes porque agradecerlo, para eso estamos.");
+
+            return await stepContext.BeginDialogAsync(nameof(MainLuisDialog), null, cancellationToken);
+        }
     }
 }

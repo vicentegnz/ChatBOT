@@ -29,6 +29,7 @@ using ChatBOT.Core.Errors;
 using System.IO;
 using Microsoft.Bot.Builder.Dialogs.Declarative.Resources;
 using Microsoft.Bot.Connector.Authentication;
+using ChatBOT.Dialogs;
 
 namespace ChatBOT
 {
@@ -74,23 +75,40 @@ namespace ChatBOT
             var connectedServices = new BotServices(botConfig);
             services.AddSingleton(sp => connectedServices);
 
-            services.AddSingleton<IBotFrameworkHttpAdapter, AdapterWithErrorHandler>();
 
             services.AddSingleton<ISpellCheckService, SpellCheckService>();
             services.AddSingleton<ISearchService, BingSearchService>();
             services.AddSingleton<ITeacherService, TeacherService>();
             services.AddSingleton<OpenDataService>();
             services.AddSingleton<IOpenDataService, OpenDataCacheService>();
-            services.AddSingleton<ICredentialProvider, ConfigurationCredentialProvider>();
 
-            services.AddBot<NexoBot>(Options =>
+
+
+            services.AddSingleton<ICredentialProvider, ConfigurationCredentialProvider>();
+            services.AddSingleton<IBotFrameworkHttpAdapter, AdapterWithErrorHandler>();
+
+            //Create the storage we'll be using for User and Conversation state. (Memory is great for testing purposes.)
+            services.AddSingleton<IStorage, MemoryStorage>();
+
+            // Create the User state. (Used in this bot's Dialog implementation.)
+            services.AddSingleton<UserState>();
+
+            // Create the Conversation state. (Used by the Dialog system itself.)
+            services.AddSingleton<ConversationState>();
+
+            // The Dialog that will be run by the bot.
+            services.AddSingleton<MainLuisDialog>();
+
+            // Create the bot as a transient. In this case the ASP Controller is expecting an IBot.
+            services.AddBot<NexoBot<MainLuisDialog>>(Options =>
             {
                 var conversationState = new ConversationState(new MemoryStorage());
                 Options.State.Add(conversationState);
                 Options.CredentialProvider = new ConfigurationCredentialProvider(Configuration);
             });
 
-            services.AddSingleton(serviceProvider => {
+            services.AddSingleton(serviceProvider =>
+            {
 
                 var options = serviceProvider.GetRequiredService<IOptions<BotFrameworkOptions>>().Value;
                 var conversationState = options.State.OfType<ConversationState>().FirstOrDefault();
@@ -121,7 +139,8 @@ namespace ChatBOT
 
             app.UseDefaultFiles()
                 .UseStaticFiles()
-                .UseBotFramework();
+                .UseMvc();
+            ;
         }
     }
 }
