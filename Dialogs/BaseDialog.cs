@@ -7,10 +7,10 @@ namespace ChatBOT.Dialogs
 {
     public class BaseDialog : ComponentDialog
     {
-        public BaseDialog(string dialogId, IEnumerable<WaterfallStep> steps = null) : base(dialogId)
+        public BaseDialog(string dialogId, IEnumerable<WaterfallStep> steps = null) : base(dialogId ?? nameof(BaseDialog))
         {
         }
-        public static async Task<DialogTurnResult> DialogByIntent(WaterfallStepContext stepContext, (string intent, double score)? topIntent)
+        public async Task<DialogTurnResult> DialogByIntent(WaterfallStepContext stepContext, (string intent, double score)? topIntent)
         {
             switch (topIntent.Value.intent)
             {

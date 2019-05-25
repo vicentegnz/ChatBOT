@@ -33,15 +33,18 @@ namespace ChatBOT.Bot
 
 
         #region "Constructor"
-        public NexoBot(ConversationState conversationState, UserState userState, T dialog, ILogger<NexoBot<T>> logger, NexoBotAccessors nexoBotAccessors)
+        public NexoBot(ConversationState conversationState, UserState userState, T dialog, ILogger<NexoBot<T>> logger)
         {
 
             _conversationState = conversationState;
             _userState = userState;
             _dialog = dialog;
             _logger = logger;
-            _nexoBotAccessors = nexoBotAccessors;
-
+            _nexoBotAccessors = new NexoBotAccessors(conversationState)
+            {
+                DialogStateAccessor = _conversationState.CreateProperty<DialogState>(NexoBotAccessors.DialogStateAccessorName),
+                NexoBotStateStateAccessor = _conversationState.CreateProperty<NexoBotState>(NexoBotAccessors.NexoBotStateAccesorName),
+            };
             //var dialogState = nexoBotAccessors.DialogStateAccessor;
             //_dialogs = new DialogSet(dialogState);
             //_dialogs.Add(new MainLuisDialog(MainLuisDialog.Id, services));
@@ -131,7 +134,6 @@ namespace ChatBOT.Bot
 
             await _nexoBotAccessors.NexoBotStateStateAccessor.GetAsync(turnContext, () => new NexoBotState(), cancellationToken);
             turnContext.TurnState.Add(nameof(NexoBotAccessors), _nexoBotAccessors);
-
 
             await _nexoBotAccessors.NexoBotStateStateAccessor.SetAsync(turnContext, new NexoBotState(), cancellationToken);
             await _nexoBotAccessors.ConversationState.SaveChangesAsync(turnContext, false, cancellationToken);

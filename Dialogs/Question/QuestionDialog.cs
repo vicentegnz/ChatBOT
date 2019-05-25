@@ -23,7 +23,7 @@ namespace ChatBOT.Dialogs
         #endregion
 
 
-        public QuestionDialog(string dialogId,  BotServices services, ISpellCheckService spellCheckService  ,ISearchService searchService, IEnumerable<WaterfallStep> steps = null) : base(dialogId, steps)
+        public QuestionDialog(string dialogId, BotServices services, ISpellCheckService spellCheckService  ,ISearchService searchService, IEnumerable<WaterfallStep> steps = null) : base(dialogId ?? nameof(QuestionDialog))
         {
             _services = services ?? throw new ArgumentNullException(nameof(services));
 

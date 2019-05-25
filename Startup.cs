@@ -100,29 +100,8 @@ namespace ChatBOT
             services.AddSingleton<MainLuisDialog>();
 
             // Create the bot as a transient. In this case the ASP Controller is expecting an IBot.
-            services.AddBot<NexoBot<MainLuisDialog>>(Options =>
-            {
-                var conversationState = new ConversationState(new MemoryStorage());
-                Options.State.Add(conversationState);
-                Options.CredentialProvider = new ConfigurationCredentialProvider(Configuration);
-            });
-
-            services.AddSingleton(serviceProvider =>
-            {
-
-                var options = serviceProvider.GetRequiredService<IOptions<BotFrameworkOptions>>().Value;
-                var conversationState = options.State.OfType<ConversationState>().FirstOrDefault();
-
-                var accessors = new NexoBotAccessors(conversationState)
-                {
-                    DialogStateAccessor = conversationState.CreateProperty<DialogState>(NexoBotAccessors.DialogStateAccessorName),
-                    NexoBotStateStateAccessor = conversationState.CreateProperty<NexoBotState>(NexoBotAccessors.NexoBotStateAccesorName),
-                };
-
-                return accessors;
-
-            });
-
+            services.AddTransient<IBot, NexoBot<MainLuisDialog>>();
+           
             var resourceExplorer = ResourceExplorer.LoadProject(Directory.GetCurrentDirectory(), ignoreFolders: new string[] { "models" });
             services.AddSingleton(resourceExplorer);
 
