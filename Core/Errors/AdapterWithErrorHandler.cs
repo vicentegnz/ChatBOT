@@ -16,7 +16,7 @@ namespace ChatBOT.Core.Errors
             : base(credentialProvider)
         {
             // combine path for cross platform support
-            string[] paths = { ".","Core" ,"Errors","AdapterWithErrorHandler.LG" };
+            string[] paths = { ".","Core" ,"Errors","AdapterWithErrorHandler.lg" };
             string fullPath = Path.Combine(paths);
             _lgEngine = TemplateEngine.FromFiles(fullPath);
 
