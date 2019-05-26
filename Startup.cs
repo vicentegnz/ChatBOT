@@ -75,14 +75,11 @@ namespace ChatBOT
             var connectedServices = new BotServices(botConfig);
             services.AddSingleton(sp => connectedServices);
 
-
             services.AddSingleton<ISpellCheckService, SpellCheckService>();
             services.AddSingleton<ISearchService, BingSearchService>();
             services.AddSingleton<ITeacherService, TeacherService>();
             services.AddSingleton<OpenDataService>();
             services.AddSingleton<IOpenDataService, OpenDataCacheService>();
-
-
 
             services.AddSingleton<ICredentialProvider, ConfigurationCredentialProvider>();
             services.AddSingleton<IBotFrameworkHttpAdapter, AdapterWithErrorHandler>();
@@ -102,9 +99,6 @@ namespace ChatBOT
             // Create the bot as a transient. In this case the ASP Controller is expecting an IBot.
             services.AddTransient<IBot, NexoBot<MainLuisDialog>>();
            
-            var resourceExplorer = ResourceExplorer.LoadProject(Directory.GetCurrentDirectory(), ignoreFolders: new string[] { "models" });
-            services.AddSingleton(resourceExplorer);
-
         }
 
 
@@ -119,7 +113,7 @@ namespace ChatBOT
             app.UseDefaultFiles()
                 .UseStaticFiles()
                 .UseMvc();
-            ;
+            
         }
     }
 }
