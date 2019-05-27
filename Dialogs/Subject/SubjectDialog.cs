@@ -47,7 +47,7 @@ namespace ChatBOT.Dialogs
             await stepContext.Context.SendActivityAsync($"La universidad de extremadura tiene muchos centros, podrías indicarme el nombre del centro del que necesitas esta información.");
             List<string> centersName = centers.Select(x => x.Name).ToList();
 
-            return await stepContext.PromptAsync("choicePrompt", new PromptOptions
+            return await stepContext.PromptAsync(nameof(ChoicePrompt), new PromptOptions
             {
                 Prompt = stepContext.Context.Activity.CreateReply($"Los centros que tengo disponibles son los siguiente {Environment.NewLine} ¿De las siguientes opciones que te gustaría consultar?"),
                 Choices = ChoiceFactory.ToChoices(centersName),
@@ -85,7 +85,7 @@ namespace ChatBOT.Dialogs
             await stepContext.Context.SendActivityAsync($"Aquí tienes la página web donde encontraras mucha información de este grado. {state.DegreeCenterModel.Url}");
             var subjects = state.DegreeCenterModel.Subjects.Select(x => x.Name).ToList();
 
-            return await stepContext.PromptAsync("choicePrompt",
+            return await stepContext.PromptAsync(nameof(ChoicePrompt),
             new PromptOptions
             {
                 Prompt = stepContext.Context.Activity.CreateReply($"Para este grado {state.DegreeCenterModel.Name.ToLower()}, tengo disponibles las siguientes asignaturas: "),
