@@ -5,8 +5,10 @@ using ChatBOT.Core;
 using ChatBOT.Domain;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Bot.Builder.LanguageGeneration;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,10 +18,14 @@ namespace ChatBOT.Dialogs
     {
 
         #region "Properties"
+        private readonly TemplateEngine _lgEngine;
         #endregion
 
         public LanguageNotValidDialog(string dialogId,  IEnumerable<WaterfallStep> steps = null) : base(dialogId, steps)
         {
+            string fullPath = Path.Combine(new string[] { ".", "Dialogs","Language", "LanguageNotValidDialog.lg" });
+            _lgEngine = TemplateEngine.FromFiles(fullPath);
+
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[] { SendMessageStepAsync }));
             InitialDialogId = nameof(WaterfallDialog);
 
@@ -27,7 +33,7 @@ namespace ChatBOT.Dialogs
 
         private async Task<DialogTurnResult> SendMessageStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            await stepContext.Context.SendActivityAsync($"El lenguage que estás utilizando no es el adecuado.");
+            await stepContext.Context.SendActivityAsync(_lgEngine.EvaluateTemplate("LanguageNotValid", null));
             return await stepContext.BeginDialogAsync(nameof(MainLuisDialog), null, cancellationToken);
         }
 

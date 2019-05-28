@@ -1,7 +1,6 @@
 ﻿using Microsoft.Bot.Builder.Dialogs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Microsoft.Bot.Builder.LanguageGeneration;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,16 +8,24 @@ namespace ChatBOT.Dialogs
 {
     public class GratitudeDialog : BaseDialog
     {
+        #region Properties
+
+        private readonly TemplateEngine _lgEngine;
+      
+        #endregion
+
         public GratitudeDialog(string dialogId) : base(dialogId)
         {
+            string fullPath = Path.Combine(new string[] { ".", "Dialogs", "Language", "GratitudeDialog.lg" });
+            _lgEngine = TemplateEngine.FromFiles(fullPath);
+
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]{ SendMessageStepAsync }));
             InitialDialogId = nameof(WaterfallDialog);
-
         }
 
         private async Task<DialogTurnResult> SendMessageStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            await stepContext.Context.SendActivityAsync("No tienes porque agradecerlo, para eso estamos.");
+            await stepContext.Context.SendActivityAsync(_lgEngine.EvaluateTemplate("Gratitude", null));
 
             return await stepContext.BeginDialogAsync(nameof(MainLuisDialog), null, cancellationToken);
         }

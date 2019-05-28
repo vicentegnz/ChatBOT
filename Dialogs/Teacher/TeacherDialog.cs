@@ -4,9 +4,10 @@ using ChatBOT.Core.Extensions;
 using ChatBOT.Domain;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Choices;
+using Microsoft.Bot.Builder.LanguageGeneration;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,10 +16,18 @@ namespace ChatBOT.Dialogs
 {
     public sealed class TeacherDialog : ComponentDialog
     {
+        #region Properties
+
+        private readonly TemplateEngine _lgEngine;
         private readonly ITeacherService _teacherService;
+ 
+        #endregion
         public TeacherDialog(string dialogId, ITeacherService teacherService, IEnumerable<WaterfallStep> steps = null) : base(dialogId)
         {
             _teacherService = teacherService;
+
+            string fullPath = Path.Combine(new string[] { ".", "Dialogs", "Teacher", "TeacherDialog.lg" });
+            _lgEngine = TemplateEngine.FromFiles(fullPath);
 
             ChoicePrompt choicePrompt = new ChoicePrompt(nameof(ChoicePrompt));
             choicePrompt.ChoiceOptions = new ChoiceFactoryOptions { IncludeNumbers = false };
@@ -54,7 +63,7 @@ namespace ChatBOT.Dialogs
             return await stepContext.PromptAsync(nameof(TextPrompt),
                 new PromptOptions
                 {
-                    Prompt = stepContext.Context.Activity.CreateReply("¿Podrías indicarme el nombre del profesor?")
+                    Prompt = stepContext.Context.Activity.CreateReply(_lgEngine.EvaluateTemplate("AskTeacher",null))
                 });
         }
 
@@ -73,7 +82,7 @@ namespace ChatBOT.Dialogs
                 {
                     if (teachersSearched.Count == 1)
                     {
-                        await stepContext.Context.SendActivityAsync($"En esta dirección encontrarás toda su información {teachersSearched.FirstOrDefault().InfoUrl}.");
+                        await stepContext.Context.SendActivityAsync(_lgEngine.EvaluateTemplate("TeacherInfo", null) + teachersSearched.FirstOrDefault().InfoUrl);
                         return await stepContext.ReplaceDialogAsync(nameof(MainLuisDialog), null, cancellationToken);
                     }
 
@@ -83,21 +92,22 @@ namespace ChatBOT.Dialogs
                     return await stepContext.PromptAsync(nameof(ChoicePrompt),
                         new PromptOptions
                         {
-                            Prompt = stepContext.Context.Activity.CreateReply($"He encontrado varios profesores con esos datos {Environment.NewLine} ¿De cual de estos profesores necesitas más información?"),
+                            Prompt = stepContext.Context.Activity.CreateReply(_lgEngine.EvaluateTemplate("FoundSomeTeachers", null)),
                             Choices = choices,
-                            RetryPrompt = stepContext.Context.Activity.CreateReply("Por favor, comprueba que has escrito uno de los profesores listados.")
+                            RetryPrompt = stepContext.Context.Activity.CreateReply(_lgEngine.EvaluateTemplate("NoTeacherFoundAskAgain", null))
                         });
                 }
                 else
                 {
-                    await stepContext.Context.SendActivityAsync($"No tengo en la base de datos ningún profesor con estos datos ({result}).");
+                    //TODO AÑADIR RESULT EN EL OBJETO
+                    await stepContext.Context.SendActivityAsync(_lgEngine.EvaluateTemplate("NoTeacherFound", null));
                     return await stepContext.ReplaceDialogAsync(Id);
                 }
 
             }
             else
             {
-                await stepContext.Context.SendActivityAsync("En estos momentos la lista de profesores no está disponible, intentelo mas tarde.");
+                await stepContext.Context.SendActivityAsync(_lgEngine.EvaluateTemplate("TeacherListNotAvailable", null));
                 return await stepContext.EndDialogAsync();
             }
         }
@@ -109,12 +119,13 @@ namespace ChatBOT.Dialogs
             List<TeacherModel> teachersSearched = GetTeachersFilteredByName(response, _teacherService.GetListOfTeachers().Result);
             if (teachersSearched.Any())
             {
-                await stepContext.Context.SendActivityAsync($"En esta dirección encontrarás toda su información {teachersSearched.FirstOrDefault().InfoUrl}.");
+                await stepContext.Context.SendActivityAsync(_lgEngine.EvaluateTemplate("TeacherInfo",null) + teachersSearched.FirstOrDefault().InfoUrl);
                 return await stepContext.ReplaceDialogAsync(nameof(MainLuisDialog), null, cancellationToken);
             }
             else
             {
-                await stepContext.Context.SendActivityAsync($"No tengo ningun profesor con esos datos.");
+                //TODO AÑADIR RESULT EN EL OBJETO
+                await stepContext.Context.SendActivityAsync(_lgEngine.EvaluateTemplate("NoTeacherFound", null));
                 return await stepContext.ReplaceDialogAsync(nameof(TeacherDialog), null, cancellationToken);
             }
         }
