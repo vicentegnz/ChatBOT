@@ -114,8 +114,6 @@ namespace ChatBOT.Bot
             // Save any state changes that might have occured during the turn.
             await _conversationState.SaveChangesAsync(turnContext, false, cancellationToken);
             await _userState.SaveChangesAsync(turnContext, false, cancellationToken);
-            await _nexoBotAccessors.ConversationState.SaveChangesAsync(turnContext, false, cancellationToken);
-
         }
 
 
@@ -128,8 +126,6 @@ namespace ChatBOT.Bot
             await _nexoBotAccessors.NexoBotStateStateAccessor.GetAsync(turnContext, () => new NexoBotState(), cancellationToken);
             turnContext.TurnState.Add(nameof(NexoBotAccessors), _nexoBotAccessors);
 
-            await _nexoBotAccessors.NexoBotStateStateAccessor.SetAsync(turnContext, new NexoBotState(), cancellationToken);
-            await _nexoBotAccessors.ConversationState.SaveChangesAsync(turnContext, false, cancellationToken);
             await _dialog.Run(turnContext, _conversationState.CreateProperty<DialogState>(nameof(DialogState)), cancellationToken);
         }
 

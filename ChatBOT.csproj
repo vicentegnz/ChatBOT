@@ -52,31 +52,31 @@
     <None Update="Core\Errors\AdapterWithErrorHandler.lg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Dialogs\MainLuisDialog.lg">
+    <None Update="Resources\MainLuisDialog.lg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Dialogs\Language\NegationDialog.lg">
+    <None Update="Resources\NegationDialog.lg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Dialogs\Language\LanguageNotValidDialog.lg">
+    <None Update="Resources\LanguageNotValidDialog.lg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Dialogs\Language\HelpDialog.lg">
+    <None Update="Resources\HelpDialog.lg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Dialogs\Language\GratitudeDialog.lg">
+    <None Update="Resources\GratitudeDialog.lg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Dialogs\Language\GoodByeDialog.lg">
+    <None Update="Resources\GoodByeDialog.lg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Dialogs\Question\QuestionDialog.lg">
+    <None Update="Resources\QuestionDialog.lg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Dialogs\Subject\SubjectDialog.lg">
+    <None Update="Resources\SubjectDialog.lg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Dialogs\Teacher\TeacherDialog.lg">
+    <None Update="Resources\TeacherDialog.lg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Model.zip">

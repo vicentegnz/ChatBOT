@@ -5,8 +5,10 @@ using ChatBOT.Core;
 using ChatBOT.Domain;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Bot.Builder.LanguageGeneration;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,12 +21,16 @@ namespace ChatBOT.Dialogs
         private readonly BotServices _services;
         private readonly ISpellCheckService _spellCheckService;
         private readonly ISearchService _searchService;
-
+        private readonly TemplateEngine _lgEngine;
+        
         #endregion
 
 
         public QuestionDialog(string dialogId, BotServices services, ISpellCheckService spellCheckService  ,ISearchService searchService, IEnumerable<WaterfallStep> steps = null) : base(dialogId ?? nameof(QuestionDialog))
         {
+            string fullPath = Path.Combine(new string[] { ".", ".", "Resources", "QuestionDialog.lg" });
+            _lgEngine = TemplateEngine.FromFiles(fullPath);
+
             _services = services ?? throw new ArgumentNullException(nameof(services));
 
             if (!_services.LuisServices.ContainsKey(LuisServiceConfiguration.LuisKey))
@@ -40,7 +46,7 @@ namespace ChatBOT.Dialogs
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
                                         IntroQuestionStepAsync,
-                                        ActQuestionStepAsync,
+                                        CheckIfAnswerIsValidStepAsync,
                                         RepeatQuestionStepAsync,
                                         IsValidQuestionStepAsync,
                                         EndQuestionStepAsync
@@ -68,7 +74,7 @@ namespace ChatBOT.Dialogs
                 //Bing Web Search
                 SearchResponseModel searchResponse = await _searchService.GetResultFromSearch(stepContext.Context.Activity.Text);
                 if (searchResponse != null)
-                    message = $"No entiendo muy bien tu pregunta, he realizado una busqueda por la página de la Universidad de Extremadura y he encontrado esto:\n{searchResponse.Description}\n{searchResponse.Url}";
+                    message = _lgEngine.EvaluateTemplate("Answer", searchResponse);
             }
 
             await stepContext.Context.SendActivityAsync(message);
@@ -76,12 +82,12 @@ namespace ChatBOT.Dialogs
         }
 
 
-        private async Task<DialogTurnResult> ActQuestionStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        private async Task<DialogTurnResult> CheckIfAnswerIsValidStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             return await stepContext.PromptAsync(nameof(TextPrompt),
                 new PromptOptions
                 {
-                    Prompt = stepContext.Context.Activity.CreateReply($"¿Te ha servido la respuesta? Si no te ha servido la respuesta vuelve a formularmela de otra manera.")
+                    Prompt = stepContext.Context.Activity.CreateReply(_lgEngine.EvaluateTemplate("AskIfAnswerOk", null))
                 });
         }
 
@@ -94,7 +100,7 @@ namespace ChatBOT.Dialogs
 
             if (state.Messages.Contains(stepContext.Result.ToString()))
             {
-                await stepContext.Context.SendActivityAsync("Lo siento, pero no tengo la información que necesitas para esa pregunta.");
+                await stepContext.Context.SendActivityAsync(_lgEngine.EvaluateTemplate("InfoNotFoundForSecondTime",null));
                 return await stepContext.NextAsync();
             }
             else
@@ -116,7 +122,7 @@ namespace ChatBOT.Dialogs
             return await stepContext.PromptAsync(nameof(TextPrompt),
                 new PromptOptions
                 {
-                    Prompt = stepContext.Context.Activity.CreateReply($"¿Necesitas hacer alguna otra pregunta?")
+                    Prompt = stepContext.Context.Activity.CreateReply(_lgEngine.EvaluateTemplate("AskAgain",null))
                 });
         }     
 

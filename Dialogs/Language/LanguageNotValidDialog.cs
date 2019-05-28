@@ -23,7 +23,7 @@ namespace ChatBOT.Dialogs
 
         public LanguageNotValidDialog(string dialogId,  IEnumerable<WaterfallStep> steps = null) : base(dialogId, steps)
         {
-            string fullPath = Path.Combine(new string[] { ".", "Dialogs","Language", "LanguageNotValidDialog.lg" });
+            string fullPath = Path.Combine(new string[] { ".", ".", "Resources", "LanguageNotValidDialog.lg" });
             _lgEngine = TemplateEngine.FromFiles(fullPath);
 
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[] { SendMessageStepAsync }));

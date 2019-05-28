@@ -22,7 +22,7 @@ namespace ChatBOT.Dialogs
 
         public HelpDialog(string dialogId, IEnumerable<WaterfallStep> steps = null) : base(dialogId)
         {
-            string fullPath = Path.Combine(new string[] { ".", "Dialogs", "Language", "HelpDialog.lg" });
+            string fullPath = Path.Combine(new string[] { ".", ".", "Resources", "HelpDialog.lg" });
             _lgEngine = TemplateEngine.FromFiles(fullPath);
 
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[] { SendMessageStepAsync }));

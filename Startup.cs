@@ -15,10 +15,6 @@ using ChatBot.Services;
 using ChatBOT.Core;
 using ChatBOT.Services;
 using Microsoft.Bot.Builder;
-using Microsoft.Bot.Builder.Integration;
-using Microsoft.Extensions.Options;
-using Microsoft.Bot.Builder.Dialogs;
-using System.Linq;
 using BotServiceCollectionExtensions = ChatBOT.Core.Extensions.ServiceCollectionExtensions;
 
 using ChatBOT.Core.Extensions;
@@ -26,8 +22,6 @@ using ChatBOT.Domain;
 using Microsoft.Bot.Builder.BotFramework;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;
 using ChatBOT.Core.Errors;
-using System.IO;
-using Microsoft.Bot.Builder.Dialogs.Declarative.Resources;
 using Microsoft.Bot.Connector.Authentication;
 using ChatBOT.Dialogs;
 
@@ -41,9 +35,10 @@ namespace ChatBOT
         {
             ContentRootPath = env.ContentRootPath;
 
-            var builder = new ConfigurationBuilder().SetBasePath(ContentRootPath).AddJsonFile("appsettings.json").AddEnvironmentVariables();
+            Configuration = new ConfigurationBuilder().SetBasePath(ContentRootPath).AddJsonFile("appsettings.json")
+                .AddEnvironmentVariables()
+                .Build();
 
-            Configuration = builder.Build();
         }
 
         public IConfiguration Configuration { get; }
@@ -51,18 +46,7 @@ namespace ChatBOT
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-            //Framework services
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddAutoMapper();
-
-            #region "Set Configuration"
-            services.AddConfiguration(BotServiceCollectionExtensions.ConfType.DegreeConfig, "Conf\\opendata.json");
-            #endregion
-
-            #region "Configure"
-            services.Configure<DegreeConfigModel>(services.GetConfiguration(BotServiceCollectionExtensions.ConfType.DegreeConfig));
-            #endregion
+            #region BotConfigurationFile
 
             var secretKey = Configuration.GetSection("botFileSecret")?.Value;
             var botFilePath = Configuration.GetSection("botFilePath")?.Value;
@@ -71,15 +55,40 @@ namespace ChatBOT
             var botConfig = BotConfiguration.Load(botFilePath ?? @".\BotConfiguration.bot", secretKey);
             services.AddSingleton(sp => botConfig ?? throw new InvalidOperationException($"The .bot configuration file could not be loaded. ({botConfig})"));
 
-            // Initialize Bot Connected Services clients.
+            #endregion
+
+            #region FrameworkServices
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddAutoMapper();
+
+            #endregion
+
+            #region Set Configuration
+
+            services.AddConfiguration(BotServiceCollectionExtensions.ConfType.DegreeConfig, "Conf\\opendata.json");
+            
+            #endregion
+
+            #region Configure
+
+            services.Configure<DegreeConfigModel>(services.GetConfiguration(BotServiceCollectionExtensions.ConfType.DegreeConfig));
+           
+            #endregion
+
+            #region BotServices
+            
             var connectedServices = new BotServices(botConfig);
             services.AddSingleton(sp => connectedServices);
-
             services.AddSingleton<ISpellCheckService, SpellCheckService>();
             services.AddSingleton<ISearchService, BingSearchService>();
             services.AddSingleton<ITeacherService, TeacherService>();
             services.AddSingleton<OpenDataService>();
             services.AddSingleton<IOpenDataService, OpenDataCacheService>();
+
+            #endregion
+
+            #region Bot
 
             services.AddSingleton<ICredentialProvider, ConfigurationCredentialProvider>();
             services.AddSingleton<IBotFrameworkHttpAdapter, AdapterWithErrorHandler>();
@@ -98,11 +107,10 @@ namespace ChatBOT
 
             // Create the bot as a transient. In this case the ASP Controller is expecting an IBot.
             services.AddTransient<IBot, NexoBot<MainLuisDialog>>();
-           
+
+            #endregion
+
         }
-
-
-
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)

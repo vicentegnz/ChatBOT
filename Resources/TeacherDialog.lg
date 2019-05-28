@@ -3,9 +3,9 @@
 - Dime el nombre del profesor que estás buscando 
 - ¿Podrías decirme el nombre del profesor? 
 
-# TeacherInfo (param) 
-- En esta dirección encontrarás toda su información param.InfoUrl
-- Está es la dirección donde tienes su información param.InfoUrl
+# TeacherInfo 
+- En esta dirección encontrarás toda su información {InfoUrl}
+- Está es la dirección donde tienes su información {InfoUrl}
 
 # FoundSomeTeachers
 - He encontrado varios profesores con esos datos ¿de cual de estos profesores necesitas más información?

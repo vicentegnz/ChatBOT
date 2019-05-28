@@ -26,7 +26,7 @@ namespace ChatBOT.Dialogs
         {
             _teacherService = teacherService;
 
-            string fullPath = Path.Combine(new string[] { ".", "Dialogs", "Teacher", "TeacherDialog.lg" });
+            string fullPath = Path.Combine(new string[] { ".", ".", "Resources", "TeacherDialog.lg" });
             _lgEngine = TemplateEngine.FromFiles(fullPath);
 
             ChoicePrompt choicePrompt = new ChoicePrompt(nameof(ChoicePrompt));
@@ -82,7 +82,7 @@ namespace ChatBOT.Dialogs
                 {
                     if (teachersSearched.Count == 1)
                     {
-                        await stepContext.Context.SendActivityAsync(_lgEngine.EvaluateTemplate("TeacherInfo", null) + teachersSearched.FirstOrDefault().InfoUrl);
+                        await stepContext.Context.SendActivityAsync(_lgEngine.EvaluateTemplate("TeacherInfo", teachersSearched.FirstOrDefault()));
                         return await stepContext.ReplaceDialogAsync(nameof(MainLuisDialog), null, cancellationToken);
                     }
 
@@ -119,7 +119,7 @@ namespace ChatBOT.Dialogs
             List<TeacherModel> teachersSearched = GetTeachersFilteredByName(response, _teacherService.GetListOfTeachers().Result);
             if (teachersSearched.Any())
             {
-                await stepContext.Context.SendActivityAsync(_lgEngine.EvaluateTemplate("TeacherInfo",null) + teachersSearched.FirstOrDefault().InfoUrl);
+                await stepContext.Context.SendActivityAsync(_lgEngine.EvaluateTemplate("TeacherInfo", teachersSearched.FirstOrDefault()) + teachersSearched.FirstOrDefault().InfoUrl);
                 return await stepContext.ReplaceDialogAsync(nameof(MainLuisDialog), null, cancellationToken);
             }
             else
