@@ -18,7 +18,7 @@ namespace ChatBOT.Dialogs
         public GoodByeDialog(string dialogId, IEnumerable<WaterfallStep> steps = null) : base(dialogId)
         {
             string fullPath = Path.Combine(new string[] { ".", ".", "Resources", "GoodByeDialog.lg" });
-            _lgEngine = TemplateEngine.FromFiles(fullPath);
+            _lgEngine = new TemplateEngine().AddFile(fullPath);
 
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[] { SendMessageStepAsync }));
             InitialDialogId = nameof(WaterfallDialog);

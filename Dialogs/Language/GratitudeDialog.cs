@@ -17,7 +17,7 @@ namespace ChatBOT.Dialogs
         public GratitudeDialog(string dialogId) : base(dialogId)
         {
             string fullPath = Path.Combine(new string[] { ".", ".", "Resources", "GratitudeDialog.lg" });
-            _lgEngine = TemplateEngine.FromFiles(fullPath);
+            _lgEngine = new TemplateEngine().AddFile(fullPath);
 
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]{ SendMessageStepAsync }));
             InitialDialogId = nameof(WaterfallDialog);

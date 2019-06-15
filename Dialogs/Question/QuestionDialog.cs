@@ -29,7 +29,7 @@ namespace ChatBOT.Dialogs
         public QuestionDialog(string dialogId, BotServices services, ISpellCheckService spellCheckService  ,ISearchService searchService, IEnumerable<WaterfallStep> steps = null) : base(dialogId ?? nameof(QuestionDialog))
         {
             string fullPath = Path.Combine(new string[] { ".", ".", "Resources", "QuestionDialog.lg" });
-            _lgEngine = TemplateEngine.FromFiles(fullPath);
+            _lgEngine = new TemplateEngine().AddFile(fullPath);
 
             _services = services ?? throw new ArgumentNullException(nameof(services));
 

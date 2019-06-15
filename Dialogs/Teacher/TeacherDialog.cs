@@ -27,7 +27,7 @@ namespace ChatBOT.Dialogs
             _teacherService = teacherService;
 
             string fullPath = Path.Combine(new string[] { ".", ".", "Resources", "TeacherDialog.lg" });
-            _lgEngine = TemplateEngine.FromFiles(fullPath);
+            _lgEngine = new TemplateEngine().AddFile(fullPath);
 
             ChoicePrompt choicePrompt = new ChoicePrompt(nameof(ChoicePrompt));
             choicePrompt.ChoiceOptions = new ChoiceFactoryOptions { IncludeNumbers = false };

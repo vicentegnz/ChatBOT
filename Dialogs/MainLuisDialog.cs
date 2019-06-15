@@ -25,7 +25,7 @@ namespace ChatBOT.Dialogs
         public MainLuisDialog(BotServices botServices, ITeacherService teacherService,IOpenDataService openDataService,  ISearchService searchService, ISpellCheckService spellCheckService,string dialogId = null,IEnumerable<WaterfallStep> steps = null) : base(dialogId ?? nameof(MainLuisDialog))
         {
             string fullPath = Path.Combine(new string[]{ ".", ".", "Resources", "MainLuisDialog.lg" });
-            _lgEngine = TemplateEngine.FromFiles(fullPath);
+            _lgEngine = new TemplateEngine().AddFile(fullPath);
 
             _services = botServices ?? throw new ArgumentNullException(nameof(botServices));
 

@@ -30,11 +30,11 @@ namespace ChatBOT.Dialogs
             _openDataService = openDataService;
 
             string fullPath = Path.Combine(new string[] { ".", ".", "Resources", "SubjectDialog.lg" });
-            _lgEngine = TemplateEngine.FromFiles(fullPath);
+            _lgEngine = new TemplateEngine().AddFile(fullPath);
 
             ChoicePrompt choicePrompt = new ChoicePrompt(nameof(ChoicePrompt));
             choicePrompt.ChoiceOptions = new ChoiceFactoryOptions { IncludeNumbers = false };
-            choicePrompt.RecognizerOptions = new FindChoicesOptions { AllowPartialMatches = true };
+            //choicePrompt.RecognizerOptions = new FindChoicesOptions { AllowPartialMatches = true };
             AddDialog(choicePrompt);
             AddDialog(new TextPrompt(nameof(TextPrompt)));
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
