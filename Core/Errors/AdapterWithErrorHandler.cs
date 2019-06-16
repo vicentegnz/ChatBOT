@@ -18,7 +18,7 @@ namespace ChatBOT.Core.Errors
             // combine path for cross platform support
             string[] paths = { ".","Core" ,"Errors","AdapterWithErrorHandler.lg" };
             string fullPath = Path.Combine(paths);
-            _lgEngine = TemplateEngine.FromFiles(fullPath);
+            _lgEngine = new TemplateEngine().AddFile(fullPath);
 
             OnTurnError = async (turnContext, exception) =>
             {

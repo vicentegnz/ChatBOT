@@ -37,19 +37,46 @@
     <PackageReference Include="Microsoft.ML" Version="0.7.0" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="4.7.0" />
     
-    <PackageReference Include="Microsoft.Bot.Builder.Dialogs.Adaptive" Version="4.5.0-Preview-2019-05-02-02" />
-    <PackageReference Include="Microsoft.Bot.Builder.Dialogs.Debugging" Version="4.5.0-Preview-2019-05-02-02" />
-    <PackageReference Include="Microsoft.Bot.Builder.LanguageGeneration" Version="4.5.0-Preview-2019-05-02-02" />
-    <PackageReference Include="Microsoft.Bot.Builder.LanguageGeneration.Renderer" Version="4.5.0-Preview-2019-05-02-02" />
-    <PackageReference Include="Microsoft.Bot.Builder.AI.Luis" Version="4.5.0-Preview-2019-05-02-02" />
-    <PackageReference Include="Microsoft.Bot.Builder.AI.QnA" Version="4.5.0-Preview-2019-05-02-02" />
-    <PackageReference Include="Microsoft.Bot.Builder.Integration.AspNet.Core" Version="4.5.0-Preview-2019-05-02-02" />
+    <PackageReference Include="Microsoft.Bot.Builder.Dialogs.Adaptive" Version="4.6.0-Daily-2019-06-14-01" />
+    <PackageReference Include="Microsoft.Bot.Builder.Dialogs.Debugging" Version="4.6.0-Daily-2019-06-14-01" />
+    <PackageReference Include="Microsoft.Bot.Builder.LanguageGeneration" Version="4.6.0-Daily-2019-06-14-01" />
+    <PackageReference Include="Microsoft.Bot.Builder.LanguageGeneration.Renderer" Version="4.6.0-Daily-2019-06-14-01" />
+    <PackageReference Include="Microsoft.Bot.Builder.AI.Luis" Version="4.6.0-Daily-2019-06-14-01" />
+    <PackageReference Include="Microsoft.Bot.Builder.AI.QnA" Version="4.6.0-Daily-2019-06-14-01" />
+    <PackageReference Include="Microsoft.Bot.Builder.Integration.AspNet.Core" Version="4.6.0-Daily-2019-06-14-01" />
 
 
   </ItemGroup>
 
   <ItemGroup>
     <None Update="Core\Errors\AdapterWithErrorHandler.lg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\MainLuisDialog.lg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\NegationDialog.lg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\LanguageNotValidDialog.lg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\HelpDialog.lg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\GratitudeDialog.lg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\GoodByeDialog.lg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\QuestionDialog.lg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\SubjectDialog.lg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\TeacherDialog.lg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Model.zip">

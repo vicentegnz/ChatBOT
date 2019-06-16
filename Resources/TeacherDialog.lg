@@ -1,0 +1,26 @@
+﻿# AskTeacher
+- ¿Podrías indicarme el nombre del profesor?
+- Dime el nombre del profesor que estás buscando 
+- ¿Podrías decirme el nombre del profesor? 
+
+# TeacherInfo 
+- En esta dirección encontrarás toda su información {InfoUrl}
+- Está es la dirección donde tienes su información {InfoUrl}
+
+# FoundSomeTeachers
+- He encontrado varios profesores con esos datos ¿de cual de estos profesores necesitas más información?
+- Existe más de un profesor con tu búsqueda ¿de cual de ellos necesitas más información?
+- Aparecen varios profesores con esos datos, ¿podrías ser más preciso?
+
+# NoTeacherFound
+- No tengo ningun profesor con esos datos.
+- No he encontrado ningún profesor con esos datos.
+- ¿Estas seguro que existe algun profesor con esos datos? No he encontrado con esos datos.
+- Con esos datos no hay ningún profesor.
+
+# NoTeacherFoundAskAgain
+- Por favor, comprueba que has escrito uno de los profesores listados.
+- Por favor, verifica que has escrito correctamente uno de los profesores listados.
+
+# TeacherListNotAvailable
+- En estos momentos la lista de profesores no está disponible, intentelo mas tarde.

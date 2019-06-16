@@ -1,0 +1,39 @@
+﻿# ConfirmAskAgain
+- [Confirm], [AskAgain]
+
+# MainGreeting
+- Hola, soy Nexo 🤖 un asistente virtual de la Unex
+- Buenas, mi nombre es Nexo 🤖 y soy un asistente virtual de la Unex, [AskAgain]
+- Hola ¿Que tal?, me llamo Nexo 🤖 y soy un asistente virtual de la Unex, [AskAgain]
+
+# GreetingsAndAskAgain
+- [GreetingsAgain], [AskAgain]
+
+# GreetingsAgain
+- Hola de nuevo
+- Buenas otra vez
+
+# AskAgain
+- ¿En que te puedo ayudar?
+- ¿Quieres que te ayude en algo más?
+- Dime en que más te puedo ayudar.
+- Estoy deseando escucharte de nuevo.
+
+# Confirm
+- Perfecto
+- Estupendo
+- De acuerdo
+- Vale
+
+# SomethingWentWrong
+- [ErrorPrefix], [ErrorSuffix]
+
+# ErrorSuffix
+- algo ha ido mal.
+- parece que ha habido un error. Tenemos que empezar de nuevo. 
+- algo no está bien. Tenemos que empezar otra vez. 
+
+# ErrorPrefix
+- Oops
+- Lo siento
+- Disculpa
