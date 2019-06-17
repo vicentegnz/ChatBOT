@@ -15,7 +15,7 @@ using Microsoft.Bot.Builder.LanguageGeneration;
 
 namespace ChatBOT.Dialogs
 {
-    public sealed class SubjectDialog : ComponentDialog
+    public sealed class SubjectDialog : BaseDialog
     {
         #region Properties
 
@@ -115,11 +115,6 @@ namespace ChatBOT.Dialogs
 
             return await stepContext.ReplaceDialogAsync(nameof(MainLuisDialog), null, cancellationToken);
 
-        }
-
-        private static async Task<NexoBotState> GetNexoBotState(WaterfallStepContext stepContext)
-        {
-            return await (stepContext.Context.TurnState[nameof(NexoBotAccessors)] as NexoBotAccessors).NexoBotStateStateAccessor.GetAsync(stepContext.Context);
         }
 
     }

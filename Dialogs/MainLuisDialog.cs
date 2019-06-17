@@ -22,7 +22,15 @@ namespace ChatBOT.Dialogs
         private readonly TemplateEngine _lgEngine;
         #endregion
 
-        public MainLuisDialog(BotServices botServices, ITeacherService teacherService,IOpenDataService openDataService,  ISearchService searchService, ISpellCheckService spellCheckService,string dialogId = null,IEnumerable<WaterfallStep> steps = null) : base(dialogId ?? nameof(MainLuisDialog))
+        public MainLuisDialog(
+            BotServices botServices,
+            ITeacherService teacherService,
+            IOpenDataService openDataService,
+            ISearchService searchService,
+            ISpellCheckService spellCheckService,
+            IUnexFacilitiesService unexFacilitiesService,
+            string dialogId = null,
+            IEnumerable<WaterfallStep> steps = null) : base(dialogId ?? nameof(MainLuisDialog))
         {
             string fullPath = Path.Combine(new string[]{ ".", ".", "Resources", "MainLuisDialog.lg" });
             _lgEngine = new TemplateEngine().AddFile(fullPath);
@@ -40,6 +48,7 @@ namespace ChatBOT.Dialogs
             AddDialog(new QuestionDialog(nameof(QuestionDialog), botServices, spellCheckService, searchService));
             AddDialog(new SubjectDialog(nameof(SubjectDialog),openDataService));
             AddDialog(new TeacherDialog(nameof(TeacherDialog), teacherService));
+            AddDialog(new UnexFacilitiesDialog(nameof(UnexFacilitiesDialog), unexFacilitiesService));
 
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {

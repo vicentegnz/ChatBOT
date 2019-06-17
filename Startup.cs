@@ -83,9 +83,9 @@ namespace ChatBOT
             services.AddSingleton<ISpellCheckService, SpellCheckService>();
             services.AddSingleton<ISearchService, BingSearchService>();
             services.AddSingleton<ITeacherService, TeacherService>();
-            services.AddSingleton<OpenDataService>();
+            services.AddSingleton<IUnexFacilitiesService, UnexFacilitiesService>();
             services.AddSingleton<IOpenDataService, OpenDataCacheService>();
-
+            services.AddSingleton<OpenDataService>();
             #endregion
 
             #region Bot

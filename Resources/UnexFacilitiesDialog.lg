@@ -1,0 +1,35 @@
+﻿# IntroFacilities 
+- La universidad de extremadura tiene muchos servicios, necesito algo más de información
+- La universidad de extremadura tiene muchos servicios, te voy a mostrar algunos de las temáticas de los servicios que tenemos disponibles para que puedas filtrar por ellos
+
+# FacilitiePrefix
+- La universidad de extremadura tiene muchos centros
+- Los centros que tengo disponibles son los siguientes
+
+# AskFacilitie
+- [FacilitiePrefix], podrías indicarme el nombre del servicio del que necesitas esta información.
+- [FacilitiePrefix], ¿de las siguientes opciones que te gustaría consultar?"
+
+# AskFacilitieAgain
+- Por favor, escriba una de las siguientes servicios para que te pueda ayudar en tu consulta.
+
+# FoundSomeFacilities
+- 
+- 
+- 
+
+# AnswerIntermediateFacilities
+- Siguiendo tu sugerencia la unex tiene disponibles estos servicios
+
+# NoFacilitieFound
+- 
+- 
+- 
+- 
+
+# NoFacilitieFoundAskAgain
+- 
+- 
+
+# FacilitieListNotAvailable
+- 

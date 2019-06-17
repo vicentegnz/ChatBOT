@@ -52,6 +52,9 @@
     <None Update="Core\Errors\AdapterWithErrorHandler.lg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Resources\UnexFacilitiesDialog.lg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Resources\MainLuisDialog.lg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

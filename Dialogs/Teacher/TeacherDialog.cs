@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace ChatBOT.Dialogs
 {
-    public sealed class TeacherDialog : ComponentDialog
+    public sealed class TeacherDialog : BaseDialog
     {
         #region Properties
 
