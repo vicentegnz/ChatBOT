@@ -63,7 +63,7 @@ namespace ChatBOT.Dialogs
             return await stepContext.PromptAsync(nameof(TextPrompt),
                 new PromptOptions
                 {
-                    Prompt = stepContext.Context.Activity.CreateReply(_lgEngine.EvaluateTemplate("AskTeacher",null))
+                    Prompt = stepContext.Context.Activity.CreateReply(_lgEngine.EvaluateTemplate("AskTeacher"))
                 });
         }
 
@@ -92,22 +92,22 @@ namespace ChatBOT.Dialogs
                     return await stepContext.PromptAsync(nameof(ChoicePrompt),
                         new PromptOptions
                         {
-                            Prompt = stepContext.Context.Activity.CreateReply(_lgEngine.EvaluateTemplate("FoundSomeTeachers", null)),
+                            Prompt = stepContext.Context.Activity.CreateReply(_lgEngine.EvaluateTemplate("FoundSomeTeachers")),
                             Choices = choices,
-                            RetryPrompt = stepContext.Context.Activity.CreateReply(_lgEngine.EvaluateTemplate("NoTeacherFoundAskAgain", null))
+                            RetryPrompt = stepContext.Context.Activity.CreateReply(_lgEngine.EvaluateTemplate("NoTeacherFoundAskAgain"))
                         });
                 }
                 else
                 {
                     //TODO AÑADIR RESULT EN EL OBJETO
-                    await stepContext.Context.SendActivityAsync(_lgEngine.EvaluateTemplate("NoTeacherFound", null));
+                    await stepContext.Context.SendActivityAsync(_lgEngine.EvaluateTemplate("NoTeacherFound"));
                     return await stepContext.ReplaceDialogAsync(Id);
                 }
 
             }
             else
             {
-                await stepContext.Context.SendActivityAsync(_lgEngine.EvaluateTemplate("TeacherListNotAvailable", null));
+                await stepContext.Context.SendActivityAsync(_lgEngine.EvaluateTemplate("TeacherListNotAvailable"));
                 return await stepContext.EndDialogAsync();
             }
         }
@@ -125,7 +125,7 @@ namespace ChatBOT.Dialogs
             else
             {
                 //TODO AÑADIR RESULT EN EL OBJETO
-                await stepContext.Context.SendActivityAsync(_lgEngine.EvaluateTemplate("NoTeacherFound", null));
+                await stepContext.Context.SendActivityAsync(_lgEngine.EvaluateTemplate("NoTeacherFound"));
                 return await stepContext.ReplaceDialogAsync(nameof(TeacherDialog), null, cancellationToken);
             }
         }

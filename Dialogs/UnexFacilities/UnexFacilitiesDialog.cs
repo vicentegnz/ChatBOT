@@ -24,6 +24,11 @@ namespace ChatBOT.Dialogs
             _lgEngine = new TemplateEngine().AddFile(Path.Combine(new string[] { ".", ".", "Resources", "UnexFacilitiesDialog.lg" }));
             _unexFacilitiesService = unexFacilititesService;
 
+            ChoicePrompt choicePrompt = new ChoicePrompt(nameof(ChoicePrompt));
+            choicePrompt.ChoiceOptions = new ChoiceFactoryOptions { IncludeNumbers = false };
+            choicePrompt.RecognizerOptions = new FindChoicesOptions { AllowPartialMatches = true };
+            AddDialog(choicePrompt);
+
             AddDialog(new TextPrompt(nameof(TextPrompt)));
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
               {
@@ -40,16 +45,16 @@ namespace ChatBOT.Dialogs
 
         private async Task<DialogTurnResult> IntroFacilitiesQuestionStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            List<UnexFacilitieModel> facilities = _unexFacilitiesService.GetUnexFacilities();
+            List<UnexFacilitieModel> facilities = await _unexFacilitiesService.GetUnexFacilities();
 
-            await stepContext.Context.SendActivityAsync(_lgEngine.EvaluateTemplate("IntroFacilities", null));
+            await stepContext.Context.SendActivityAsync(_lgEngine.EvaluateTemplate("IntroFacilities"));
 
-            return await stepContext.PromptAsync(nameof(TextPrompt),
+            return await stepContext.PromptAsync(nameof(ChoicePrompt),
                 new PromptOptions
                 {
-                    RetryPrompt = stepContext.Context.Activity.CreateReply(_lgEngine.EvaluateTemplate("AskFacilitieAgain", null)),
-                    Choices = ChoiceFactory.ToChoices(facilities.Select(x => x.Name).ToList()),
-                    Prompt = stepContext.Context.Activity.CreateReply(_lgEngine.EvaluateTemplate("AskFacilitie", null))
+                    RetryPrompt = stepContext.Context.Activity.CreateReply(_lgEngine.EvaluateTemplate("AskFacilitieAgain")),
+                    Choices = ChoiceFactory.ToChoices(facilities.Select(x => x.Name).Distinct().ToList()),
+                    Prompt = stepContext.Context.Activity.CreateReply(_lgEngine.EvaluateTemplate("AskFacilitie"))
                 });
         }
 

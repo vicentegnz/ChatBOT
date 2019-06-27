@@ -87,7 +87,7 @@ namespace ChatBOT.Dialogs
             return await stepContext.PromptAsync(nameof(TextPrompt),
                 new PromptOptions
                 {
-                    Prompt = stepContext.Context.Activity.CreateReply(_lgEngine.EvaluateTemplate("AskIfAnswerOk", null))
+                    Prompt = stepContext.Context.Activity.CreateReply(_lgEngine.EvaluateTemplate("AskIfAnswerOk"))
                 });
         }
 
@@ -100,7 +100,7 @@ namespace ChatBOT.Dialogs
 
             if (state.Messages.Contains(stepContext.Result.ToString()))
             {
-                await stepContext.Context.SendActivityAsync(_lgEngine.EvaluateTemplate("InfoNotFoundForSecondTime",null));
+                await stepContext.Context.SendActivityAsync(_lgEngine.EvaluateTemplate("InfoNotFoundForSecondTime"));
                 return await stepContext.NextAsync();
             }
             else
@@ -122,7 +122,7 @@ namespace ChatBOT.Dialogs
             return await stepContext.PromptAsync(nameof(TextPrompt),
                 new PromptOptions
                 {
-                    Prompt = stepContext.Context.Activity.CreateReply(_lgEngine.EvaluateTemplate("AskAgain",null))
+                    Prompt = stepContext.Context.Activity.CreateReply(_lgEngine.EvaluateTemplate("AskAgain"))
                 });
         }     
 

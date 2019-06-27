@@ -54,13 +54,13 @@ namespace ChatBOT.Dialogs
         {
             List<StudyCenterModel> centers = _openDataService.GetStudyCenters();
 
-            await stepContext.Context.SendActivityAsync(_lgEngine.EvaluateTemplate("InitSubjectDialog", null));
+            await stepContext.Context.SendActivityAsync(_lgEngine.EvaluateTemplate("InitSubjectDialog"));
 
             return await stepContext.PromptAsync(nameof(ChoicePrompt), new PromptOptions
             {
-                Prompt = stepContext.Context.Activity.CreateReply(_lgEngine.EvaluateTemplate("AskCenterName", null)),
+                Prompt = stepContext.Context.Activity.CreateReply(_lgEngine.EvaluateTemplate("AskCenterName")),
                 Choices = ChoiceFactory.ToChoices(centers.Select(x => x.Name).ToList()),
-                RetryPrompt = stepContext.Context.Activity.CreateReply(_lgEngine.EvaluateTemplate("AskCenterNameAgain", null))
+                RetryPrompt = stepContext.Context.Activity.CreateReply(_lgEngine.EvaluateTemplate("AskCenterNameAgain"))
             });
         }
 
@@ -80,7 +80,7 @@ namespace ChatBOT.Dialogs
             {
                 Prompt = stepContext.Context.Activity.CreateReply(_lgEngine.EvaluateTemplate("DegreePrefix", state.StudyCenterModel)),
                 Choices = ChoiceFactory.ToChoices(degrees),
-                RetryPrompt = stepContext.Context.Activity.CreateReply(_lgEngine.EvaluateTemplate("AskDegreeNameAgain", null))
+                RetryPrompt = stepContext.Context.Activity.CreateReply(_lgEngine.EvaluateTemplate("AskDegreeNameAgain"))
             });
         }
 
@@ -100,7 +100,7 @@ namespace ChatBOT.Dialogs
             {
                 Prompt = stepContext.Context.Activity.CreateReply(_lgEngine.EvaluateTemplate("SubjectPrefix",state.DegreeCenterModel)),
                 Choices = ChoiceFactory.ToChoices(subjects),
-                RetryPrompt = stepContext.Context.Activity.CreateReply(_lgEngine.EvaluateTemplate("AskSubjectAgain", null))
+                RetryPrompt = stepContext.Context.Activity.CreateReply(_lgEngine.EvaluateTemplate("AskSubjectAgain"))
             });
         }
 
