@@ -62,8 +62,11 @@ namespace ChatBOT.Dialogs
         {
             var response = (stepContext.Result as FoundChoice)?.Value;
             var state = await GetNexoBotState(stepContext);
+            List<UnexFacilitieModel> facilities = await _unexFacilitiesService.GetUnexFacilities();
 
-            await stepContext.Context.SendActivityAsync(_lgEngine.EvaluateTemplate("AnswerIntermediateFacilities", state.SubjectModel));
+            state.UnexFacilitieModel = facilities.FirstOrDefault(x => x.Name.ToLower().Contains(response.ToLower()));
+
+            await stepContext.Context.SendActivityAsync(_lgEngine.EvaluateTemplate("AnswerFacilie", state.UnexFacilitieModel));
 
             return await stepContext.ReplaceDialogAsync(nameof(MainLuisDialog), null, cancellationToken);
         }
