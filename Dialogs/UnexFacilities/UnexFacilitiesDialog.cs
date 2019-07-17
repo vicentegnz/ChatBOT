@@ -34,8 +34,7 @@ namespace ChatBOT.Dialogs
               {
                                         IntroFacilitiesQuestionStepAsync,
                                         IntermediateFacilitiesAnswerStepAsync,                                   
-                                        //QuestionSubjectStepAsync,
-                                        //EndQuestionStepAsync,
+                                        EndQuestionStepAsync,
 
               }));
 
@@ -45,6 +44,21 @@ namespace ChatBOT.Dialogs
 
         private async Task<DialogTurnResult> IntroFacilitiesQuestionStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
+            List<string> categoryFacilities = await _unexFacilitiesService.GetUnexFacilitiesCategories();
+
+            return await stepContext.PromptAsync(nameof(ChoicePrompt),
+                new PromptOptions
+                {
+                    RetryPrompt = stepContext.Context.Activity.CreateReply(_lgEngine.EvaluateTemplate("AskFacilitieCategoryAgain")),
+                    Choices = ChoiceFactory.ToChoices(categoryFacilities),
+                    Prompt = stepContext.Context.Activity.CreateReply(_lgEngine.EvaluateTemplate("AskFacilitieCategory"))
+                });
+        }
+
+        private async Task<DialogTurnResult> IntermediateFacilitiesAnswerStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        {
+            var response = (stepContext.Result as FoundChoice)?.Value;
+
             List<UnexFacilitieModel> facilities = await _unexFacilitiesService.GetUnexFacilities();
 
             await stepContext.Context.SendActivityAsync(_lgEngine.EvaluateTemplate("IntroFacilities"));
@@ -53,12 +67,15 @@ namespace ChatBOT.Dialogs
                 new PromptOptions
                 {
                     RetryPrompt = stepContext.Context.Activity.CreateReply(_lgEngine.EvaluateTemplate("AskFacilitieAgain")),
-                    Choices = ChoiceFactory.ToChoices(facilities.Select(x => x.Name).Distinct().ToList()),
+                    Choices = ChoiceFactory.ToChoices(facilities.Where(x => x.Category.ToLower().Equals(response.ToLower())).Select(x => x.Name).Distinct().ToList()),
                     Prompt = stepContext.Context.Activity.CreateReply(_lgEngine.EvaluateTemplate("AskFacilitie"))
                 });
+
         }
 
-        private async Task<DialogTurnResult> IntermediateFacilitiesAnswerStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+
+
+        private async Task<DialogTurnResult> EndQuestionStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             var response = (stepContext.Result as FoundChoice)?.Value;
             var state = await GetNexoBotState(stepContext);
@@ -70,7 +87,6 @@ namespace ChatBOT.Dialogs
 
             return await stepContext.ReplaceDialogAsync(nameof(MainLuisDialog), null, cancellationToken);
         }
-
 
     }
 }

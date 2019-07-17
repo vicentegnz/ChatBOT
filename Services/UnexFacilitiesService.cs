@@ -29,15 +29,25 @@ namespace ChatBOT.Services
                 var htmlDocument = new HtmlDocument();
                 htmlDocument.LoadHtml(html);
 
-                var facilitiesList = htmlDocument.DocumentNode.SelectNodes("//div/dl/dt/span/a").ToList();
+                var categoriesFacilitiesService = htmlDocument.DocumentNode.SelectSingleNode("//div[@id='content-core']");
+                var categoryName = "Servicio";
 
-                foreach (var node in facilitiesList)    
+                foreach (var servicesTypeNode in categoriesFacilitiesService?.ChildNodes)    
                 {
-                    unexFacilitiesModels.Add(new UnexFacilitieModel
+                    if (servicesTypeNode.OriginalName.Equals("h2"))
+                        categoryName = servicesTypeNode.SelectSingleNode("span/a").InnerHtml;
+
+                    if (servicesTypeNode.OriginalName.Equals("dl"))
                     {
-                        Name = node.InnerHtml,
-                        Url = node.GetAttributeValue("href", string.Empty)
-                    });
+                        var facilitie = servicesTypeNode.SelectSingleNode("dt/span/a");
+                        unexFacilitiesModels.Add(new UnexFacilitieModel
+                        {
+                            Category = categoryName,
+                            Name = facilitie.InnerHtml,
+                            Url = facilitie.GetAttributeValue("href", string.Empty)
+                        });
+
+                    }
                 }
             }
             catch (Exception)
@@ -46,6 +56,29 @@ namespace ChatBOT.Services
             }
 
             return unexFacilitiesModels;
+        }
+
+        public async Task<List<string>> GetUnexFacilitiesCategories()
+        {
+            var categories = new List<string>();
+            var httpClient = new HttpClient();
+            try
+            {
+                var html = await httpClient.GetStringAsync(UNEX_FACILITIES_PATH);
+                var htmlDocument = new HtmlDocument();
+                htmlDocument.LoadHtml(html);
+
+                var categoriesFacilities = htmlDocument.DocumentNode.SelectNodes("//div[@id='content-core']/h2/span/a").ToList();
+
+                foreach (var category in categoriesFacilities) categories.Add(category.InnerHtml);
+
+            }
+            catch (Exception)
+            {
+                return categories;
+            }
+
+            return categories;
         }
     }
 }

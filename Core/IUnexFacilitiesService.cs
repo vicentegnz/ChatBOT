@@ -6,7 +6,9 @@ namespace ChatBOT.Core
 {
     public interface IUnexFacilitiesService
     {
-        Task<List<UnexFacilitieModel>> GetUnexFacilities(); 
+        Task<List<UnexFacilitieModel>> GetUnexFacilities();
+
+        Task<List<string>> GetUnexFacilitiesCategories();
 
     }
 }
