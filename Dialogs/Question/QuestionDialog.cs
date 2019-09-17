@@ -6,6 +6,7 @@ using ChatBOT.Domain;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.LanguageGeneration;
+using Microsoft.Bot.Schema;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -84,6 +85,9 @@ namespace ChatBOT.Dialogs
 
         private async Task<DialogTurnResult> CheckIfAnswerIsValidStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
+
+            Thread.Sleep(3000);
+
             return await stepContext.PromptAsync(nameof(TextPrompt),
                 new PromptOptions
                 {
@@ -112,12 +116,13 @@ namespace ChatBOT.Dialogs
 
             return topIntent.Value.intent == LuisServiceConfiguration.OkIntent
                 ? await stepContext.ReplaceDialogAsync(nameof(MainLuisDialog), null, cancellationToken)
-                : await DialogByIntent(stepContext, topIntent);
+                : await BeginDialogByIntent(stepContext, topIntent);
         }
 
 
         private async Task<DialogTurnResult> IsValidQuestionStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
+            Thread.Sleep(3000);
 
             return await stepContext.PromptAsync(nameof(TextPrompt),
                 new PromptOptions
@@ -138,7 +143,7 @@ namespace ChatBOT.Dialogs
 
             return topIntent.Value.intent == LuisServiceConfiguration.OkIntent
                 ? await stepContext.ReplaceDialogAsync(nameof(MainLuisDialog), null, cancellationToken)
-                : await DialogByIntent(stepContext, topIntent);
+                : await BeginDialogByIntent(stepContext, topIntent);
 
 
         }

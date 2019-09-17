@@ -65,24 +65,27 @@ namespace ChatBOT.Dialogs
 
         private async Task<DialogTurnResult> IntroStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
+            string message;
             var recognizerResult = await _services.LuisServices[LuisServiceConfiguration.LuisKey].RecognizeAsync(stepContext.Context, cancellationToken);
             var topIntent = recognizerResult?.GetTopScoringIntent();
             var state = await(stepContext.Context.TurnState[nameof(NexoBotAccessors)] as NexoBotAccessors).NexoBotStateStateAccessor.GetAsync(stepContext.Context);
-            var message = _lgEngine.EvaluateTemplate("AskAgain", null);
-
+            
             if (topIntent != null && LuisServiceConfiguration.HelloIntent == topIntent.Value.intent)
             {
                 message = state.Messages.Any() ?  _lgEngine.EvaluateTemplate("GreetingsAndAskAgain", null) : _lgEngine.EvaluateTemplate("MainGreeting", null);
             }
             else
             {
-                if (state.Messages.Any())
+
+                if (!state.Messages.Any())
                 {
-                    if (topIntent != null)
-                        message = topIntent.Value.intent == LuisServiceConfiguration.OkIntent ? _lgEngine.EvaluateTemplate("ConfirmAskAgain", null) : _lgEngine.EvaluateTemplate("AskAgain", null);
-                    else
-                        message = _lgEngine.EvaluateTemplate("AskAgain", null);
+                    await BeginDialogByIntent(stepContext, topIntent);
                 }
+
+                if (topIntent != null)
+                    message = topIntent.Value.intent == LuisServiceConfiguration.OkIntent ? _lgEngine.EvaluateTemplate("ConfirmAskAgain", null) : _lgEngine.EvaluateTemplate("AskAgain", null);
+                else
+                    message = _lgEngine.EvaluateTemplate("AskAgain", null);
             }
 
             return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions {Prompt = MessageFactory.Text(message)}, cancellationToken);
@@ -102,7 +105,7 @@ namespace ChatBOT.Dialogs
             {
                 return topIntent.Value.intent == LuisServiceConfiguration.OkIntent
                 ? await stepContext.ReplaceDialogAsync(nameof(MainLuisDialog), null, cancellationToken)
-                : await DialogByIntent(stepContext, topIntent);
+                : await BeginDialogByIntent(stepContext, topIntent);
             }
 
             await stepContext.Context.SendActivityAsync(_lgEngine.EvaluateTemplate("SomethingWentWrong", null));
@@ -110,7 +113,10 @@ namespace ChatBOT.Dialogs
 
         }
 
-        private async Task<DialogTurnResult> FinalStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken) { return await stepContext.EndDialogAsync(); }
+        private async Task<DialogTurnResult> FinalStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        {
+            return await stepContext.EndDialogAsync();
+        }
 
     }
 }

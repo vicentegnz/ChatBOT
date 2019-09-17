@@ -18,8 +18,6 @@ namespace ChatBOT.Domain
 
         public List<SubjectModel> Subjects { get; set; }
 
-        public List<ExamModel> Exams { get; set; }
-
         public List<TeacherModel> Teachers { get; set; }
 
     }
@@ -54,11 +52,6 @@ namespace ChatBOT.Domain
         public string InfoUrl { get; set; }
         public string Degree { get; set; }
         public int Students { get; set; }
-    }
-    public class ExamModel
-    {
-        public int Semestre { get; set; }
-        public string InfoUrl { get; set; }
 
     }
 
