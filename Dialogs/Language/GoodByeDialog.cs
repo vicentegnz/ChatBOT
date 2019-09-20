@@ -1,8 +1,7 @@
-﻿using ChatBOT.Core;
-using Microsoft.Bot.Builder.Dialogs;
-using System;
+﻿using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Bot.Builder.LanguageGeneration;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,10 +9,17 @@ namespace ChatBOT.Dialogs
 {
     public class GoodByeDialog : BaseDialog 
     {
-        
+        #region Properties
+
+        private readonly TemplateEngine _lgEngine;
+
+        #endregion
 
         public GoodByeDialog(string dialogId, IEnumerable<WaterfallStep> steps = null) : base(dialogId)
         {
+            string fullPath = Path.Combine(new string[] { ".", ".", "Resources", "GoodByeDialog.lg" });
+            _lgEngine = new TemplateEngine().AddFile(fullPath);
+
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[] { SendMessageStepAsync }));
             InitialDialogId = nameof(WaterfallDialog);
 
@@ -21,7 +27,7 @@ namespace ChatBOT.Dialogs
 
         private async Task<DialogTurnResult> SendMessageStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            await stepContext.Context.SendActivityAsync(@"Hasta luego, espero haberte ayudado.");
+            await stepContext.Context.SendActivityAsync(_lgEngine.EvaluateTemplate("GoodBye", null));
 
             return await stepContext.EndDialogAsync();
         }

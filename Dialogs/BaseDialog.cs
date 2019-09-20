@@ -1,16 +1,18 @@
-﻿using ChatBOT.Conf;
+﻿using ChatBOT.Bot;
+using ChatBOT.Conf;
 using Microsoft.Bot.Builder.Dialogs;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ChatBOT.Dialogs
 {
+
     public class BaseDialog : ComponentDialog
     {
         public BaseDialog(string dialogId, IEnumerable<WaterfallStep> steps = null) : base(dialogId ?? nameof(BaseDialog))
         {
         }
-        public async Task<DialogTurnResult> DialogByIntent(WaterfallStepContext stepContext, (string intent, double score)? topIntent)
+        public async Task<DialogTurnResult> BeginDialogByIntent(WaterfallStepContext stepContext, (string intent, double score)? topIntent)
         {
             switch (topIntent.Value.intent)
             {
@@ -30,9 +32,16 @@ namespace ChatBOT.Dialogs
                     return await stepContext.BeginDialogAsync(nameof(GoodByeDialog));
                 case LuisServiceConfiguration.NotIntent:
                     return await stepContext.BeginDialogAsync(nameof(NegationDialog));
+                case LuisServiceConfiguration.FacilitieIntent:
+                    return await stepContext.BeginDialogAsync(nameof(UnexFacilitiesDialog));
                 default:
                     return await stepContext.BeginDialogAsync(nameof(MainLuisDialog));
             }
+        }
+
+        protected async Task<NexoBotState> GetNexoBotState(WaterfallStepContext stepContext)
+        {
+            return await (stepContext.Context.TurnState[nameof(NexoBotAccessors)] as NexoBotAccessors).NexoBotStateStateAccessor.GetAsync(stepContext.Context);
         }
     }
 }

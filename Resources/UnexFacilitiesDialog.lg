@@ -1,0 +1,56 @@
+﻿# IntroFacilities 
+- Estos son algunos de los servicios que tenemos disponibles para esta categoría
+
+# IntroFacilitiesCategories
+- La universidad de extremadura tiene muchos servicios, te voy a mostrar algunas de las temáticas de los servicios que tenemos disponibles para que puedas filtrar por ellos
+
+# FacilitieCategoryPrefix
+- La universidad de extremadura tiene muchos servicios
+- Los categorias de servicios que están disponible en nuestro centro son las siguientes
+- Existen muchos servicios en la unex
+
+# FacilitiePrefix
+- La universidad de extremadura tiene muchos servicios
+- Los servicios que están disponible en nuestro centro son los siguientes
+- La unex cuenta con muchos servicios
+
+# AskFacilitieCategory
+- [FacilitieCategoryPrefix], podrías indicarme a que departamento o categoria pertenece el servicio que estás buscando.
+- [FacilitieCategoryPrefix], ¿cual es la categoria del servicio que te gustaría consultar?
+- [FacilitieCategoryPrefix], necesito que me indiques cual de las siguientes categorías de servicio te interesa.
+
+# AskFacilitie
+- [FacilitiePrefix], podrías indicarme el nombre del servicio del que necesitas esta información.
+- [FacilitiePrefix], ¿de las siguientes opciones que te gustaría consultar?
+- [FacilitiePrefix], necesito que me indiques cual de los siguientes servicios te interesa.
+
+# AskFacilitieCategoryAgain
+- Por favor, escriba una de las siguientes categorías para que te pueda ayudar en tu consulta.
+
+# AskFacilitieAgain
+- Por favor, escriba una de las siguientes servicios para que te pueda ayudar en tu consulta.
+
+# AnswerFacilie
+- Aquí tienes la página web donde encontraras mucha información sobre este servicio. {Url}
+
+
+# FoundSomeFacilities
+- 
+- 
+- 
+
+# AnswerIntermediateFacilities
+- Siguiendo tu sugerencia la unex tiene disponibles estos servicios
+
+# NoFacilitieFound
+- 
+- 
+- 
+- 
+
+# NoFacilitieFoundAskAgain
+- 
+- 
+
+# FacilitieListNotAvailable
+- 

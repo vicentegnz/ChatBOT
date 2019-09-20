@@ -1,0 +1,46 @@
+﻿# InitSubjectDialog
+- La universidad de extremadura tiene muchos centros, podrías indicarme el nombre del centro del que necesitas esta información.
+
+>CENTERS
+
+# CenterPrefix
+- La universidad de extremadura tiene muchos centros
+- Los centros que tengo disponibles son los siguientes
+
+# AskCenterName
+- [CenterPrefix], podrías indicarme el nombre del centro del que necesitas esta información.
+- [CenterPrefix], de las siguientes opciones ¿que te gustaría consultar?"
+
+# AskCenterNameAgain
+- Por favor, escriba una de las siguientes centros para que te pueda ayudar en tu consulta.
+
+# AnswerCenterName
+- Aquí tienes la página web donde encontraras mucha información de este centro. {Url}
+
+
+>DEGREES
+
+# DegreePrefix
+- Para el centro {Name}, tengo disponibles estos grados: 
+
+# AskDegreeName
+- [DegreePrefix], podrías indicarme el nombre del grado del que necesitas más información.
+
+
+# AskDegreeNameAgain
+- Por favor, escriba una de los siguientes grados para que te pueda ayudar en tu consulta.
+
+# AnswerDegreeName
+- Aquí tienes la página web donde encontraras mucha información de este grado. {Url}
+
+
+>SUBJECTS
+
+# SubjectPrefix
+- Para este grado {Name}, tengo disponibles las siguientes asignaturas:
+
+# AskSubjectAgain
+- Por favor, escriba una de las siguientes asignaturas para que te pueda ayudar en tu consulta.
+
+# AnswerSubjectName
+- Aquí tienes la página web donde encontraras mucha información de esta asignatura. {InfoUrl}

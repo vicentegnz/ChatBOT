@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,20 +11,30 @@ using ChatBOT.Core;
 using ChatBOT.Domain;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Dialogs.Choices;
+using Microsoft.Bot.Builder.LanguageGeneration;
 
 namespace ChatBOT.Dialogs
 {
-    public sealed class SubjectDialog : ComponentDialog
+    public sealed class SubjectDialog : BaseDialog
     {
+        #region Properties
+
         private readonly IOpenDataService _openDataService;
+        private readonly TemplateEngine _lgEngine;
+
+        #endregion
 
         public SubjectDialog(string dialogId, IOpenDataService openDataService, IEnumerable<WaterfallStep> steps = null) : base(dialogId)
         {
+            
             _openDataService = openDataService;
+
+            string fullPath = Path.Combine(new string[] { ".", ".", "Resources", "SubjectDialog.lg" });
+            _lgEngine = new TemplateEngine().AddFile(fullPath);
 
             ChoicePrompt choicePrompt = new ChoicePrompt(nameof(ChoicePrompt));
             choicePrompt.ChoiceOptions = new ChoiceFactoryOptions { IncludeNumbers = false };
-            choicePrompt.RecognizerOptions = new FindChoicesOptions { AllowPartialMatches = true };
+            //choicePrompt.RecognizerOptions = new FindChoicesOptions { AllowPartialMatches = true };
             AddDialog(choicePrompt);
             AddDialog(new TextPrompt(nameof(TextPrompt)));
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
@@ -41,66 +52,66 @@ namespace ChatBOT.Dialogs
 
         private async Task<DialogTurnResult> QuestionCenterStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-
             List<StudyCenterModel> centers = _openDataService.GetStudyCenters();
 
-            await stepContext.Context.SendActivityAsync($"La universidad de extremadura tiene muchos centros, podrías indicarme el nombre del centro del que necesitas esta información.");
-            List<string> centersName = centers.Select(x => x.Name).ToList();
+            await stepContext.Context.SendActivityAsync(_lgEngine.EvaluateTemplate("InitSubjectDialog"));
 
-            return await stepContext.PromptAsync("choicePrompt", new PromptOptions
+            return await stepContext.PromptAsync(nameof(ChoicePrompt), new PromptOptions
             {
-                Prompt = stepContext.Context.Activity.CreateReply($"Los centros que tengo disponibles son los siguiente {Environment.NewLine} ¿De las siguientes opciones que te gustaría consultar?"),
-                Choices = ChoiceFactory.ToChoices(centersName),
-                RetryPrompt = stepContext.Context.Activity.CreateReply("Por favor, escriba una de las siguientes centros para que te pueda ayudar en tu consulta.")
+                Prompt = stepContext.Context.Activity.CreateReply(_lgEngine.EvaluateTemplate("AskCenterName")),
+                Choices = ChoiceFactory.ToChoices(centers.Select(x => x.Name).ToList()),
+                RetryPrompt = stepContext.Context.Activity.CreateReply(_lgEngine.EvaluateTemplate("AskCenterNameAgain"))
             });
         }
 
         private async Task<DialogTurnResult> QuestionDegreeStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             var response = (stepContext.Result as FoundChoice)?.Value;
-
-            var state = await (stepContext.Context.TurnState[nameof(NexoBotAccessors)] as NexoBotAccessors).NexoBotStateStateAccessor.GetAsync(stepContext.Context);
+            var state = await GetNexoBotState(stepContext);
 
             List<StudyCenterModel> centers = _openDataService.GetStudyCenters();
             state.StudyCenterModel = centers.FirstOrDefault(x => x.Name.ToLower().Contains(response.ToLower()));
 
-            await stepContext.Context.SendActivityAsync($"Aquí tienes la página web donde encontraras mucha información de este centro. {state.StudyCenterModel.Url}");
+            await stepContext.Context.SendActivityAsync(_lgEngine.EvaluateTemplate("AnswerCenterName", state.StudyCenterModel));
             var degrees = state.StudyCenterModel.Degrees.Select(x => x.Name.ToLower()).ToList();
 
             return await stepContext.PromptAsync(nameof(ChoicePrompt),
             new PromptOptions
             {
-                Prompt = stepContext.Context.Activity.CreateReply($"Para el centro {state.StudyCenterModel.Name.ToLower()}, tengo disponibles estos grados: "),
+                Prompt = stepContext.Context.Activity.CreateReply(_lgEngine.EvaluateTemplate("DegreePrefix", state.StudyCenterModel)),
                 Choices = ChoiceFactory.ToChoices(degrees),
-                RetryPrompt = stepContext.Context.Activity.CreateReply("Por favor, escriba una de las siguientes grados para que te pueda ayudar en tu consulta.")
+                RetryPrompt = stepContext.Context.Activity.CreateReply(_lgEngine.EvaluateTemplate("AskDegreeNameAgain"))
             });
         }
 
         private async Task<DialogTurnResult> QuestionSubjectStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            var response = (stepContext.Result as FoundChoice)?.Value;
-            var state = await (stepContext.Context.TurnState[nameof(NexoBotAccessors)] as NexoBotAccessors).NexoBotStateStateAccessor.GetAsync(stepContext.Context);
-            state.DegreeCenterModel = state.StudyCenterModel.Degrees.FirstOrDefault(x => x.Name.ToLower().Contains(response.ToLower()));
+            string degreeNameResponse = (stepContext.Result as FoundChoice)?.Value;
 
-            await stepContext.Context.SendActivityAsync($"Aquí tienes la página web donde encontraras mucha información de este grado. {state.DegreeCenterModel.Url}");
+            var state = await GetNexoBotState(stepContext);
+            state.DegreeCenterModel = state.StudyCenterModel.Degrees.FirstOrDefault(x => x.Name.ToLower().Contains(degreeNameResponse.ToLower()));
+
+            await stepContext.Context.SendActivityAsync(_lgEngine.EvaluateTemplate("AnswerDegreeName", state.DegreeCenterModel));
+
             var subjects = state.DegreeCenterModel.Subjects.Select(x => x.Name).ToList();
 
-            return await stepContext.PromptAsync("choicePrompt",
+            return await stepContext.PromptAsync(nameof(ChoicePrompt),
             new PromptOptions
             {
-                Prompt = stepContext.Context.Activity.CreateReply($"Para este grado {state.DegreeCenterModel.Name.ToLower()}, tengo disponibles las siguientes asignaturas: "),
+                Prompt = stepContext.Context.Activity.CreateReply(_lgEngine.EvaluateTemplate("SubjectPrefix",state.DegreeCenterModel)),
                 Choices = ChoiceFactory.ToChoices(subjects),
-                RetryPrompt = stepContext.Context.Activity.CreateReply("Por favor, escriba una de las siguientes asignaturas para que te pueda ayudar en tu consulta.")
+                RetryPrompt = stepContext.Context.Activity.CreateReply(_lgEngine.EvaluateTemplate("AskSubjectAgain"))
             });
         }
 
         private async Task<DialogTurnResult> EndQuestionStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            var response = (stepContext.Result as FoundChoice)?.Value;
-            var state = await (stepContext.Context.TurnState[nameof(NexoBotAccessors)] as NexoBotAccessors).NexoBotStateStateAccessor.GetAsync(stepContext.Context);
-            state.SubjectModel = state.DegreeCenterModel.Subjects.FirstOrDefault(x => x.Name.ToLower().Contains(response.ToLower()));
+            string subjectNameResponse = (stepContext.Result as FoundChoice)?.Value;
 
-            await stepContext.Context.SendActivityAsync($"Aquí tienes la página web donde encontraras mucha información de esta asignatura. {state.SubjectModel.InfoUrl}");
+            NexoBotState state = await GetNexoBotState(stepContext);
+            state.SubjectModel = state.DegreeCenterModel.Subjects.FirstOrDefault(x => x.Name.ToLower().Contains(subjectNameResponse.ToLower()));
+
+            await stepContext.Context.SendActivityAsync(_lgEngine.EvaluateTemplate("AnswerSubjectName", state.SubjectModel));
 
             return await stepContext.ReplaceDialogAsync(nameof(MainLuisDialog), null, cancellationToken);
 

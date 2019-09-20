@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using ChatBOT.Conf;
 using ChatBOT.Core;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Bot.Builder.LanguageGeneration;
 
 namespace ChatBOT.Dialogs
 {
@@ -17,10 +19,21 @@ namespace ChatBOT.Dialogs
     {
         #region "Properties"
         private readonly BotServices _services;
+        private readonly TemplateEngine _lgEngine;
         #endregion
 
-        public MainLuisDialog(BotServices botServices, ITeacherService teacherService,IOpenDataService openDataService,  ISearchService searchService, ISpellCheckService spellCheckService,string dialogId = null,IEnumerable<WaterfallStep> steps = null) : base(dialogId ?? nameof(MainLuisDialog))
+        public MainLuisDialog(
+            BotServices botServices,
+            ITeacherService teacherService,
+            IOpenDataService openDataService,
+            ISearchService searchService,
+            ISpellCheckService spellCheckService,
+            IUnexFacilitiesService unexFacilitiesService,
+            string dialogId = null,
+            IEnumerable<WaterfallStep> steps = null) : base(dialogId ?? nameof(MainLuisDialog))
         {
+            string fullPath = Path.Combine(new string[]{ ".", ".", "Resources", "MainLuisDialog.lg" });
+            _lgEngine = new TemplateEngine().AddFile(fullPath);
 
             _services = botServices ?? throw new ArgumentNullException(nameof(botServices));
 
@@ -35,6 +48,7 @@ namespace ChatBOT.Dialogs
             AddDialog(new QuestionDialog(nameof(QuestionDialog), botServices, spellCheckService, searchService));
             AddDialog(new SubjectDialog(nameof(SubjectDialog),openDataService));
             AddDialog(new TeacherDialog(nameof(TeacherDialog), teacherService));
+            AddDialog(new UnexFacilitiesDialog(nameof(UnexFacilitiesDialog), unexFacilitiesService));
 
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
@@ -51,24 +65,27 @@ namespace ChatBOT.Dialogs
 
         private async Task<DialogTurnResult> IntroStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
+            string message;
             var recognizerResult = await _services.LuisServices[LuisServiceConfiguration.LuisKey].RecognizeAsync(stepContext.Context, cancellationToken);
             var topIntent = recognizerResult?.GetTopScoringIntent();
             var state = await(stepContext.Context.TurnState[nameof(NexoBotAccessors)] as NexoBotAccessors).NexoBotStateStateAccessor.GetAsync(stepContext.Context);
-            var message = $"¿En que te puedo ayudar?";
-
+            
             if (topIntent != null && LuisServiceConfiguration.HelloIntent == topIntent.Value.intent)
             {
-                message = state.Messages.Any() ? "Hola de nuevo, ¿en que te puedo ayudar?" : $"Hola, soy Nexo 🤖 un asistente virtual de la Unex. Estoy deseando escucharte.";
+                message = state.Messages.Any() ?  _lgEngine.EvaluateTemplate("GreetingsAndAskAgain", null) : _lgEngine.EvaluateTemplate("MainGreeting", null);
             }
             else
             {
-                if (state.Messages.Any())
+
+                if (!state.Messages.Any())
                 {
-                    if (topIntent != null)
-                        message = topIntent.Value.intent == LuisServiceConfiguration.OkIntent ? $"Perfecto, pues dime en que más te puedo ayudar." : $"¿Necesitas algo más?";
-                    else
-                        message = "¿Quieres que te ayude en algo más?";
+                    await BeginDialogByIntent(stepContext, topIntent);
                 }
+
+                if (topIntent != null)
+                    message = topIntent.Value.intent == LuisServiceConfiguration.OkIntent ? _lgEngine.EvaluateTemplate("ConfirmAskAgain", null) : _lgEngine.EvaluateTemplate("AskAgain", null);
+                else
+                    message = _lgEngine.EvaluateTemplate("AskAgain", null);
             }
 
             return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions {Prompt = MessageFactory.Text(message)}, cancellationToken);
@@ -88,15 +105,18 @@ namespace ChatBOT.Dialogs
             {
                 return topIntent.Value.intent == LuisServiceConfiguration.OkIntent
                 ? await stepContext.ReplaceDialogAsync(nameof(MainLuisDialog), null, cancellationToken)
-                : await DialogByIntent(stepContext, topIntent);
+                : await BeginDialogByIntent(stepContext, topIntent);
             }
 
-            await stepContext.Context.SendActivityAsync("Ha ocurrido un error, intentelo de nuevo.");
+            await stepContext.Context.SendActivityAsync(_lgEngine.EvaluateTemplate("SomethingWentWrong", null));
             return await stepContext.EndDialogAsync();
 
         }
 
-        private async Task<DialogTurnResult> FinalStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken) { return await stepContext.EndDialogAsync(); }
+        private async Task<DialogTurnResult> FinalStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        {
+            return await stepContext.EndDialogAsync();
+        }
 
     }
 }

@@ -1,0 +1,16 @@
+﻿# Answer
+- He realizado una búsqueda por la página de la Universidad de Extremadura y he encontrado esto:\n {Description} y esta es su url {Url}
+- En la página de la Universidad de Extremadura solo he encontrado esto:\n {Description} y esta es su url {Url}
+- He tenido que buscar en la página de la Universidad de Extremadura y he encontrado esto:\n {Description} y esta es su url {Url}
+
+# AskIfAnswerOk
+- ¿Te ha servido la respuesta? Si no te ha servido la respuesta vuelve a formularmela de otra manera.
+- 
+
+# InfoNotFoundForSecondTime
+- Es posible que no tenga respuesta a esa pregunta.
+- No he encontrado la información que me estás pidiendo.
+
+# AskAgain
+- ¿Necesitas hacer alguna otra pregunta?
+- ¿Quieres hacer otra pregunta?
