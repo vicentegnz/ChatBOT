@@ -17,10 +17,13 @@
   <ItemGroup>
     <None Remove=".gitignore" />
     <None Remove="certificate.pem" />
+    <None Remove="ClassDiagram.cd" />
     <None Remove="csr.csr" />
+    <None Remove="DiagramaClasesChatBot.png" />
     <None Remove="key.pem" />
     <None Remove="localhost.pfx" />
     <None Remove="ngrok" />
+    <None Remove="README.md" />
     <None Remove="UniversityOfExtremaduraBOT.bot" />
     <None Remove="Properties\PublishProfiles\nexo-qnamaker - Web Deploy.pubxml" />
   </ItemGroup>

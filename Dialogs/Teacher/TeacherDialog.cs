@@ -119,7 +119,7 @@ namespace ChatBOT.Dialogs
             List<TeacherModel> teachersSearched = GetTeachersFilteredByName(response, _teacherService.GetListOfTeachers().Result);
             if (teachersSearched.Any())
             {
-                await stepContext.Context.SendActivityAsync(_lgEngine.EvaluateTemplate("TeacherInfo", teachersSearched.FirstOrDefault()) + teachersSearched.FirstOrDefault().InfoUrl);
+                await stepContext.Context.SendActivityAsync(_lgEngine.EvaluateTemplate("TeacherInfo", teachersSearched.FirstOrDefault()));
                 return await stepContext.ReplaceDialogAsync(nameof(MainLuisDialog), null, cancellationToken);
             }
             else

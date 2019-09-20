@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace ChatBOT.Services
 {
@@ -43,7 +44,7 @@ namespace ChatBOT.Services
                         unexFacilitiesModels.Add(new UnexFacilitieModel
                         {
                             Category = categoryName,
-                            Name = facilitie.InnerHtml,
+                            Name = HttpUtility.HtmlDecode(facilitie.InnerHtml),
                             Url = facilitie.GetAttributeValue("href", string.Empty)
                         });
 

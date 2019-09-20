@@ -1,0 +1,310 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="ChatBOT.Bot.NexoBot&lt;T&gt;" Collapsed="true">
+    <Position X="13.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAAAAAAIAgAIAAAAABAAAAEAAAAAAA=</HashCode>
+      <FileName>Bot\NexoBot.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChatBOT.Bot.NexoBotAccessors" Collapsed="true">
+    <Position X="15" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAAAAAAAAAAFAAAAAAAAgAAAAAAABAAA=</HashCode>
+      <FileName>Bot\NexoBotAccesors.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChatBOT.Bot.NexoBotState" Collapsed="true">
+    <Position X="15" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAAEAAAAAAAAAAACAAAAAAAgAAAQAAAAg=</HashCode>
+      <FileName>Bot\NexoBotState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChatBOT.Conf.LuisServiceConfiguration" Collapsed="true">
+    <Position X="15.5" Y="11.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAEAAAgAAAAAAAAQIAEIAgAAAAACAFAAI=</HashCode>
+      <FileName>Conf\LuisServiceConfiguration.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChatBOT.Conf.QnaMakerServiceConfiguration" Collapsed="true">
+    <Position X="15.5" Y="11" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Conf\QnaMakerServiceConfiguration.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChatBOT.Controllers.BotController" Collapsed="true">
+    <Position X="10.25" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAIAAAAAAAAAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Controllers\BotController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChatBOT.Core.Errors.AdapterWithErrorHandler" Collapsed="true">
+    <Position X="6.75" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Errors\AdapterWithErrorHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChatBOT.Core.Extensions.DialogExtensions" Collapsed="true">
+    <Position X="3.25" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>Core\Extensions\DialogExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChatBOT.Core.Extensions.ServiceCollectionExtensions" Collapsed="true">
+    <Position X="3.25" Y="2" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAgAAIAAAAAAA=</HashCode>
+      <FileName>Core\Extensions\ServiceCollectionExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChatBOT.Core.Extensions.StringExtension" Collapsed="true">
+    <Position X="3.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Extensions\StringExtension.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChatBOT.Dialogs.GoodByeDialog" Collapsed="true">
+    <Position X="6.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>Dialogs\Language\GoodByeDialog.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChatBOT.Dialogs.GratitudeDialog" Collapsed="true">
+    <Position X="10.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>Dialogs\Language\GratitudeDialog.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChatBOT.Dialogs.HelpDialog" Collapsed="true">
+    <Position X="13.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>Dialogs\Language\HelpDialog.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChatBOT.Dialogs.LanguageNotValidDialog" Collapsed="true">
+    <Position X="15.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>Dialogs\Language\LanguageNotValidDialog.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChatBOT.Dialogs.NegationDialog" Collapsed="true">
+    <Position X="19" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>Dialogs\Language\NegationDialog.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChatBOT.Dialogs.QuestionDialog" Collapsed="true">
+    <Position X="3.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAwAACAAAGAAAAAQAAAAACAIAAAAAAAAACAAAAAAAAA=</HashCode>
+      <FileName>Dialogs\Question\QuestionDialog.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChatBOT.Dialogs.SubjectDialog" Collapsed="true">
+    <Position X="5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAwAEAAAAGAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Dialogs\Subject\SubjectDialog.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChatBOT.Dialogs.TeacherDialog" Collapsed="true">
+    <Position X="8.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAACAIAAAgCAAAAgAAAA=</HashCode>
+      <FileName>Dialogs\Teacher\TeacherDialog.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChatBOT.Dialogs.UnexFacilitiesDialog" Collapsed="true">
+    <Position X="12" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAACAAAAAAAAAAAAAEBAAAAAAAAgAAAAAAAAA=</HashCode>
+      <FileName>Dialogs\UnexFacilities\UnexFacilitiesDialog.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChatBOT.Dialogs.BaseDialog" Collapsed="true">
+    <Position X="10.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Dialogs\BaseDialog.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChatBOT.Dialogs.MainLuisDialog" Collapsed="true">
+    <Position X="17.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAACAAAAAQAAAAAAAAAAQAAAAAAIAAAAAAAAA=</HashCode>
+      <FileName>Dialogs\MainLuisDialog.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChatBOT.Domain.DegreeConfigModel" Collapsed="true">
+    <Position X="5" Y="11.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>BAAQAAAACAAAAAAAAAAAAAgAAAAEAAAACAAAAAAAAAE=</HashCode>
+      <FileName>Domain\Configuration\DegreeConfigModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChatBOT.Domain.StudyCenterConfigModel" Collapsed="true">
+    <Position X="5" Y="11" Width="2" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAA=</HashCode>
+      <FileName>Domain\Configuration\DegreeConfigModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChatBOT.Domain.DegreeModel" Collapsed="true">
+    <Position X="5" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAAgAAQAAAAAAAAACAAAAgAIAAA=</HashCode>
+      <FileName>Domain\DegreeModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChatBOT.Domain.StudyCenterModel" Collapsed="true">
+    <Position X="5" Y="8.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAACAAAAAAAAAgAAQAAAAAAAACCIAAAAAAAAA=</HashCode>
+      <FileName>Domain\DegreeModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChatBOT.Domain.SubjectModel" Collapsed="true">
+    <Position X="5" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAgAgAAAIAAgAAQQAAAAAAAAAAAAAAAIAAA=</HashCode>
+      <FileName>Domain\DegreeModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChatBOT.Domain.TeacherModel" Collapsed="true">
+    <Position X="9" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAACgAAAAEAAAAAAQAAAAAAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>Domain\DegreeModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChatBOT.Domain.SearchResponseModel" Collapsed="true">
+    <Position X="12.75" Y="8.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAEAAAAAAAAAAAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>Domain\SearchResponseModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChatBOT.Domain.UnexFacilitieModel" Collapsed="true">
+    <Position X="10.75" Y="8.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAAQAAAAAAAAACAAAAAAACAA=</HashCode>
+      <FileName>Domain\UnexFacilitieModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChatBOT.Services.BingSearchService" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="12.75" Y="5.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAIAAAAAAAAAAQAAAAAgAAAAAAA=</HashCode>
+      <FileName>Services\IA\BingSearchService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ChatBOT.Services.SpellCheckService" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="7.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAUAAAAAAAACAA=</HashCode>
+      <FileName>Services\IA\SpellCheckService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ChatBOT.Services.OpenDataCacheService" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="5" Y="5.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>Services\OpenData\OpenDataCacheService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ChatBOT.Services.OpenDataService" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="5" Y="6.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAEAIAACgIBABABAAQAABEGAACAAQBAiIBACA=</HashCode>
+      <FileName>Services\OpenData\OpenDataService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ChatBOT.Services.TeacherService" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="9" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAA=</HashCode>
+      <FileName>Services\TeacherService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChatBOT.Services.UnexFacilitiesService" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="10.75" Y="5.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAEBAAAAAAgAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\UnexFacilitiesService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ChatBot.Services.BotServices" Collapsed="true">
+    <Position X="15.25" Y="5.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>Services\IA\BotServices.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ChatBOT.Services.OpenData.OpenDataInfoCache" Collapsed="true">
+    <Position X="5" Y="7" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAQAAAAAQ=</HashCode>
+      <FileName>Services\OpenData\OpenDataInfoCache.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="ChatBOT.Core.ILanguageService" Collapsed="true">
+    <Position X="3.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\ILanguageService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ChatBOT.Core.IOpenDataService" Collapsed="true">
+    <Position X="5" Y="4.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>Core\IOpenDataService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ChatBOT.Core.ISearchService" Collapsed="true">
+    <Position X="12.75" Y="4.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\ISearchService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ChatBOT.Core.ISpellCheckService" Collapsed="true">
+    <Position X="7.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>Core\ISpellCheckService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ChatBOT.Core.ITeacherService" Collapsed="true">
+    <Position X="9" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAA=</HashCode>
+      <FileName>Core\ITeacherService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ChatBOT.Core.IUnexFacilitiesService" Collapsed="true">
+    <Position X="10.75" Y="4.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAgAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\IUnexFacilitiesService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
