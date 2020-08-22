@@ -1,0 +1,59 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ChatBot.Entities\ChatBot.Entities.csproj" />
+  </ItemGroup>
+  
+    <ItemGroup>
+      <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.7" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.7" />
+      <PackageReference Include="Microsoft.ML" Version="1.5.1" />
+      <PackageReference Include="Microsoft.Azure.CognitiveServices.Language.SpellCheck" Version="4.0.0" />
+      <PackageReference Include="Microsoft.Azure.CognitiveServices.Search.WebSearch" Version="2.0.0" />
+      <PackageReference Include="HtmlAgilityPack" Version="1.11.24" />
+      <PackageReference Include="Microsoft.Bot.Builder.Dialogs.Adaptive" Version="4.10.0" />
+      <PackageReference Include="Microsoft.Bot.Builder.LanguageGeneration" Version="4.10.0" />
+      <PackageReference Include="Microsoft.Bot.Builder.AI.Luis" Version="4.10.0" />
+      <PackageReference Include="Microsoft.Bot.Builder.AI.QnA" Version="4.10.0" />
+      <PackageReference Include="Microsoft.Bot.Builder.Integration.AspNet.Core" Version="4.10.0" />
+    </ItemGroup>
+
+    
+  <ItemGroup>
+    <None Update="Resources\GoodByeDialog.lg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\GratitudeDialog.lg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\HelpDialog.lg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\LanguageNotValidDialog.lg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\MainLuisDialog.lg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\NegationDialog.lg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\QuestionDialog.lg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\SubjectDialog.lg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\TeacherDialog.lg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\UnexFacilitiesDialog.lg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

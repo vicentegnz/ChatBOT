@@ -1,0 +1,55 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>ChatBot</AssemblyName>
+    <RootNamespace>ChatBot</RootNamespace>
+    <UserSecretsId>4f965fd2-7204-4fad-a0bf-cc3bbdfe7976</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="ChatBot\**" />
+    <Compile Remove="src\**" />
+    <Content Remove="ChatBot\**" />
+    <Content Remove="src\**" />
+    <EmbeddedResource Remove="ChatBot\**" />
+    <EmbeddedResource Remove="src\**" />
+    <None Remove="ChatBot\**" />
+    <None Remove="src\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove=".gitignore" />
+    <None Remove="certificate.pem" />
+    <None Remove="ClassDiagram.cd" />
+    <None Remove="csr.csr" />
+    <None Remove="DiagramaClasesChatBot.png" />
+    <None Remove="key.pem" />
+    <None Remove="localhost.pfx" />
+    <None Remove="ngrok" />
+    <None Remove="README.md" />
+    <None Remove="UniversityOfExtremaduraBOT.bot" />
+    <None Remove="Properties\PublishProfiles\nexo-qnamaker - Web Deploy.pubxml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel.Https" Version="2.2.0" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="4.9.3" />
+ 
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ChatBot.Domain\ChatBot.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Model.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="BotConfiguration.bot">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
