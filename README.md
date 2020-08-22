@@ -1,5 +1,7 @@
 # NexoBot
 
+# 🔍 Introduction
+
 The purpose of NexoBot was implementing a virtual assistant dedicated mainly
 to students or future students of the University of Extremadura, using data collected
 mainly from the University of Extremadura, although some of the functionalities have
@@ -16,6 +18,8 @@ range of responses of the bot, and guide the student in a more effective way.
 The bot can be used in platforms such as Telegram, Slack, Facebook, Skype, or
 even from Alexa, losing in the latter some functionalities due to it limitatuions base on
 using voice commands.
+
+# 📚 Communication flow between the components
 
 ![alt text](https://i.imgur.com/6DNH1Jh.png)
 
